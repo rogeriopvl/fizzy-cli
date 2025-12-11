@@ -1,0 +1,37 @@
+{
+  "name": "fizzy-cli",
+  "version": "0.1.0",
+  "description": "CLI for https://fizzy.do",
+  "main": "bin/fizzy",
+  "type": "module",
+  "bin": {
+    "fizzy": "bin/fizzy"
+  },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js",
+    "build": "make build-all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rogeriopvl/fizzy-cli"
+  },
+  "keywords": [
+    "fizzy",
+    "cli",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ]
+}

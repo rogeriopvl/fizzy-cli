@@ -1,4 +1,4 @@
-.PHONY: help dev-tools run build clean
+.PHONY: help dev-tools run build build-all clean test
 
 help:
 	@echo 'Usage: make [target]'
@@ -16,8 +16,17 @@ run:
 build:
 	go build -o bin/fizzy .
 
+build-all: clean
+	mkdir -p bin
+	GOOS=darwin GOARCH=amd64 go build -o bin/fizzy-darwin-amd64 .
+	GOOS=darwin GOARCH=arm64 go build -o bin/fizzy-darwin-arm64 .
+	GOOS=linux GOARCH=amd64 go build -o bin/fizzy-linux-amd64 .
+	GOOS=linux GOARCH=arm64 go build -o bin/fizzy-linux-arm64 .
+	GOOS=windows GOARCH=amd64 go build -o bin/fizzy-windows-amd64.exe .
+	@echo "Binaries built successfully in bin/"
+
 clean:
-	rm -f bin/fizzy
+	rm -rf bin/
 
 test:
 	go test -v ./...
