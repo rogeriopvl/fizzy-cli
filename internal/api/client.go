@@ -11,8 +11,9 @@ import (
 )
 
 type Client struct {
-	baseURL     string
-	accessToken string
+	baseURL        string
+	accountBaseURL string
+	accessToken    string
 }
 
 func NewClient(accountSlug string) (*Client, error) {
@@ -22,8 +23,9 @@ func NewClient(accountSlug string) (*Client, error) {
 	}
 
 	return &Client{
-		baseURL:     fmt.Sprintf("https://app.fizzy.do%s", accountSlug),
-		accessToken: token,
+		baseURL:        "https://app.fizzy.do",
+		accountBaseURL: fmt.Sprintf("https://app.fizzy.do%s", accountSlug),
+		accessToken:    token,
 	}, nil
 }
 
@@ -36,6 +38,7 @@ func (c *Client) newRequest(ctx context.Context, method, url string) (*http.Requ
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.accessToken))
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content", "application/json")
 
 	return req, nil
 }
@@ -62,7 +65,7 @@ func (c *Client) decodeResponse(req *http.Request, v any) error {
 }
 
 func (c *Client) GetBoards(ctx context.Context) ([]Board, error) {
-	endpointURL := c.baseURL + "/boards"
+	endpointURL := c.accountBaseURL + "/boards"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL)
 	if err != nil {
