@@ -2,6 +2,7 @@
 package api
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -30,66 +31,104 @@ func NewClient(accountSlug string) (*Client, error) {
 }
 
 // newRequest makes an HTTP request with the required headers setup
-func (c *Client) newRequest(ctx context.Context, method, url string) (*http.Request, error) {
-	req, err := http.NewRequestWithContext(ctx, method, url, nil)
+func (c *Client) newRequest(ctx context.Context, method, url string, body any) (*http.Request, error) {
+	var bodyReader io.Reader
+	if body != nil {
+		data, err := json.Marshal(body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal request body: %w", err)
+		}
+		bodyReader = bytes.NewReader(data)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
 	if err != nil {
 		return nil, err
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.accessToken))
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Content", "application/json")
+	req.Header.Set("Content-Type", "application/json")
 
 	return req, nil
 }
 
 // decodeResponse executes a request and decodes the JSON response into v
-func (c *Client) decodeResponse(req *http.Request, v any) error {
+// If expectedStatus is 0, it defaults to http.StatusOK
+// If v is nil, the response body is not decoded
+func (c *Client) decodeResponse(req *http.Request, v any, expectedStatus ...int) (int, error) {
+	expectedCode := http.StatusOK
+	if len(expectedStatus) > 0 {
+		expectedCode = expectedStatus[0]
+	}
+
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return fmt.Errorf("failed to make request: %w", err)
+		return 0, fmt.Errorf("failed to make request: %w", err)
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != expectedCode {
 		body, _ := io.ReadAll(res.Body)
-		return fmt.Errorf("unexpected status code %d: %s", res.StatusCode, string(body))
+		return 0, fmt.Errorf("unexpected status code %d: %s", res.StatusCode, string(body))
 	}
 
-	if err := json.NewDecoder(res.Body).Decode(v); err != nil {
-		return fmt.Errorf("failed to decode response: %w", err)
+	if v != nil {
+		if err := json.NewDecoder(res.Body).Decode(v); err != nil {
+			return 0, fmt.Errorf("failed to decode response: %w", err)
+		}
 	}
 
-	return nil
+	return res.StatusCode, nil
 }
 
 func (c *Client) GetBoards(ctx context.Context) ([]Board, error) {
 	endpointURL := c.accountBaseURL + "/boards"
 
-	req, err := c.newRequest(ctx, http.MethodGet, endpointURL)
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	var response []Board
-	if err := c.decodeResponse(req, &response); err != nil {
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
 		return nil, err
 	}
 
 	return response, nil
 }
 
+func (c *Client) PostBoards(ctx context.Context, payload CreateBoardPayload) (bool, error) {
+	endpointURL := c.accountBaseURL + "/boards"
+
+	body := map[string]CreateBoardPayload{"board": payload}
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, body)
+	if err != nil {
+		return false, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusCreated)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (c *Client) GetMyIdentity(ctx context.Context) (*GetMyIdentityResponse, error) {
 	endpointURL := c.baseURL + "/my/identity"
 
-	req, err := c.newRequest(ctx, http.MethodGet, endpointURL)
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	var response GetMyIdentityResponse
-	if err := c.decodeResponse(req, &response); err != nil {
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
 		return nil, err
 	}
 
@@ -103,6 +142,13 @@ type Board struct {
 	CreatedAt string `json:"created_at"`
 	URL       string `json:"url"`
 	Creator   User   `json:"creator"`
+}
+
+type CreateBoardPayload struct {
+	Name               string `json:"name"`
+	AllAccess          bool   `json:"all_access"`
+	AutoPostponePeriod int    `json:"auto_postpone_period"`
+	PublicDescription  string `json:"public_description"`
 }
 
 type GetMyIdentityResponse struct {

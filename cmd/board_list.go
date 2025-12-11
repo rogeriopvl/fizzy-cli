@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/rogeriopvl/fizzy-cli/internal/app"
+	"github.com/rogeriopvl/fizzy-cli/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -35,12 +36,7 @@ func handleListBoards(cmd *cobra.Command) error {
 		return nil
 	}
 
-	fmt.Println("Boards:")
-	for _, board := range boards {
-		fmt.Printf("  - %s (%s)\n", board.Name, board.ID)
-	}
-
-	return nil
+	return ui.DisplayBoards(boards)
 }
 
 func init() {
