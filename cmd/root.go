@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/rogeriopvl/fizzy-cli/internal/app"
 	"github.com/spf13/cobra"
 )
 
@@ -10,7 +11,12 @@ var rootCmd = &cobra.Command{
 	Use:   "fizzy-cli",
 	Short: "Fizzy CLI",
 	Long:  `Fizzy CLI`,
-	// Run: func(cmd *cobra.Command, args []string) { },
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		a, _ := app.New()
+		if a != nil {
+			cmd.SetContext(a.ToContext(cmd.Context()))
+		}
+	},
 }
 
 func Execute() {
