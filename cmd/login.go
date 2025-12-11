@@ -59,11 +59,10 @@ func handleLogin(cmd *cobra.Command) error {
 func chooseAccount(accounts []api.Account) (api.Account, error) {
 	if len(accounts) == 1 {
 		selected := accounts[0]
-		fmt.Printf("\nUsing account: %s (%s)\n", selected.Name, selected.Slug)
 		return selected, nil
 	}
 
-	fmt.Println("\nYour accounts:")
+	fmt.Println("\nAvailable accounts:")
 	return ui.SelectAccount(accounts)
 }
 

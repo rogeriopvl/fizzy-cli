@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/rogeriopvl/fizzy-cli/internal/app"
 	"github.com/spf13/cobra"
 )
 
@@ -11,46 +12,35 @@ var boardListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all boards",
 	Long:  `Retrieve and display all boards from Fizzy`,
-	RunE:  listBoards,
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := handleListBoards(cmd); err != nil {
+			fmt.Fprintf(cmd.OutOrStderr(), "Error: %v\n", err)
+		}
+	},
 }
 
-func listBoards(cmd *cobra.Command, args []string) error {
-	ctx := context.Background()
+func handleListBoards(cmd *cobra.Command) error {
+	a := app.FromContext(cmd.Context())
+	if a == nil || a.Client == nil {
+		return fmt.Errorf("API client not available")
+	}
 
-	// TODO: Implement API call to fetch boards
-	boards, err := fetchBoards(ctx)
+	boards, err := a.Client.GetBoards(context.Background())
 	if err != nil {
-		return fmt.Errorf("failed to list boards: %w", err)
+		return fmt.Errorf("fetching boards: %w", err)
 	}
 
-	// TODO: Format and display boards
-	if err := displayBoards(boards); err != nil {
-		return fmt.Errorf("failed to display boards: %w", err)
+	if len(boards) == 0 {
+		fmt.Println("No boards found")
+		return nil
 	}
 
-	return nil
-}
-
-// fetchBoards retrieves all boards from the Fizzy API.
-func fetchBoards(ctx context.Context) ([]Board, error) {
-	// TODO: Implement API call
-	return nil, nil
-}
-
-// displayBoards formats and outputs the boards.
-func displayBoards(boards []Board) error {
-	// TODO: Implement output formatting
+	fmt.Println("Boards:")
 	for _, board := range boards {
-		fmt.Printf("Board: %+v\n", board)
+		fmt.Printf("  - %s (%s)\n", board.Name, board.ID)
 	}
-	return nil
-}
 
-// Board represents a Fizzy board.
-type Board struct {
-	ID   string
-	Name string
-	// TODO: Add additional fields as needed
+	return nil
 }
 
 func init() {
