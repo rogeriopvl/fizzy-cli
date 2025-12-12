@@ -26,7 +26,7 @@ func New() (*App, error) {
 		return &App{Config: cfg}, nil // No token set, app will handle gracefully
 	}
 
-	client, err := api.NewClient(cfg.SelectedAccount)
+	client, err := api.NewClient(cfg.SelectedAccount, cfg.SelectedBoard)
 	if err != nil {
 		return nil, fmt.Errorf("creating API client: %w", err)
 	}

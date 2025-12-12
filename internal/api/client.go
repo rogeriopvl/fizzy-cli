@@ -14,18 +14,28 @@ import (
 type Client struct {
 	baseURL        string
 	accountBaseURL string
+	boardBaseURL   string
 	accessToken    string
 }
 
-func NewClient(accountSlug string) (*Client, error) {
+func NewClient(accountSlug string, boardID string) (*Client, error) {
+	baseURL := "https://app.fizzy.do"
+	accountBaseURL := baseURL + accountSlug
+
+	var boardBaseURL string
+	if boardID != "" {
+		boardBaseURL = accountBaseURL + "/boards" + "/" + boardID
+	}
+
 	token, isSet := os.LookupEnv("FIZZY_ACCESS_TOKEN")
 	if !isSet || token == "" {
 		return nil, fmt.Errorf("FIZZY_ACCESS_TOKEN environment variable is not set")
 	}
 
 	return &Client{
-		baseURL:        "https://app.fizzy.do",
-		accountBaseURL: fmt.Sprintf("https://app.fizzy.do%s", accountSlug),
+		baseURL:        baseURL,
+		accountBaseURL: accountBaseURL,
+		boardBaseURL:   boardBaseURL,
 		accessToken:    token,
 	}, nil
 }
@@ -107,7 +117,31 @@ func (c *Client) PostBoards(ctx context.Context, payload CreateBoardPayload) (bo
 
 	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, body)
 	if err != nil {
-		return false, fmt.Errorf("failed to create request: %w", err)
+		return false, fmt.Errorf("failed to create board request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusCreated)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (c *Client) PostColumns(ctx context.Context, payload CreateColumnPayload) (bool, error) {
+	if c.boardBaseURL == "" {
+		return false, fmt.Errorf("please select a board first with 'fizzy use --board <board_name>'")
+	}
+
+	endpointURL := c.boardBaseURL + "/columns"
+
+	fmt.Println(endpointURL)
+
+	body := map[string]CreateColumnPayload{"column": payload}
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, body)
+	if err != nil {
+		return false, fmt.Errorf("failed to create column request: %w", err)
 	}
 
 	_, err = c.decodeResponse(req, nil, http.StatusCreated)
@@ -151,6 +185,18 @@ type CreateBoardPayload struct {
 	PublicDescription  string `json:"public_description"`
 }
 
+type Column struct {
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Color     Color  `json:"color"`
+	CreatedAt string `json:"created_at"`
+}
+
+type CreateColumnPayload struct {
+	Name  string `json:"name"`
+	Color *Color `json:"color,omitempty"`
+}
+
 type GetMyIdentityResponse struct {
 	Accounts []Account `json:"accounts"`
 }
@@ -172,3 +218,17 @@ type User struct {
 	CreatedAt string `json:"created_at"`
 	URL       string `json:"url"`
 }
+
+type Color string
+
+const (
+	Blue   Color = "--color-card-default"
+	Gray   Color = "--color-card-1"
+	Tan    Color = "--color-card-2"
+	Yellow Color = "--color-card-3"
+	Lime   Color = "--color-card-4"
+	Aqua   Color = "--color-card-5"
+	Violet Color = "--color-card-6"
+	Purple Color = "--color-card-7"
+	Pink   Color = "--color-card-8"
+)
