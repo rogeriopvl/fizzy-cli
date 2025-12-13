@@ -36,6 +36,17 @@ func TestUseCommandSetBoard(t *testing.T) {
 		if r.URL.Path != "/boards" {
 			t.Errorf("expected /boards, got %s", r.URL.Path)
 		}
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+
+		auth := r.Header.Get("Authorization")
+		if auth == "" {
+			t.Error("missing Authorization header")
+		}
+		if auth != "Bearer test-token" {
+			t.Errorf("expected Bearer test-token, got %s", auth)
+		}
 
 		w.Header().Set("Content-Type", "application/json")
 		response := []api.Board{
@@ -107,6 +118,15 @@ func TestUseCommandSetAccount(t *testing.T) {
 
 func TestUseCommandBoardNotFound(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+
+		auth := r.Header.Get("Authorization")
+		if auth != "Bearer test-token" {
+			t.Errorf("expected Bearer test-token, got %s", auth)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		response := []api.Board{
 			{ID: "board-123", Name: "Existing Board"},

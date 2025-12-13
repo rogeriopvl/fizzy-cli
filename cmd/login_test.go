@@ -33,6 +33,10 @@ func TestLoginCommand(t *testing.T) {
 			t.Errorf("expected Bearer test-token, got %s", auth)
 		}
 
+		if r.Header.Get("Accept") != "application/json" {
+			t.Errorf("expected Accept: application/json, got %s", r.Header.Get("Accept"))
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		response := api.GetMyIdentityResponse{
 			Accounts: []api.Account{
