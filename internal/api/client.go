@@ -131,6 +131,10 @@ func (c *Client) PostBoards(ctx context.Context, payload CreateBoardPayload) (bo
 }
 
 func (c *Client) GetColumns(ctx context.Context) ([]Column, error) {
+	if c.BoardBaseURL == "" {
+		return nil, fmt.Errorf("please select a board first with 'fizzy use --board <board_name>'")
+	}
+
 	endpointURL := c.BoardBaseURL + "/columns"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
