@@ -8,7 +8,7 @@ import (
 
 func DisplayBoards(boards []api.Board) error {
 	for _, board := range boards {
-		fmt.Printf("%s (ID: %s)\n", board.Name, board.ID)
+		fmt.Printf("%s (%s)\n", board.Name, DisplayID(board.ID))
 	}
 	return nil
 }

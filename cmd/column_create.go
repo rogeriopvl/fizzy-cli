@@ -3,9 +3,11 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/rogeriopvl/fizzy-cli/internal/api"
 	"github.com/rogeriopvl/fizzy-cli/internal/app"
+	"github.com/rogeriopvl/fizzy-cli/internal/colors"
 	"github.com/spf13/cobra"
 )
 
@@ -14,16 +16,20 @@ var (
 	columnColor string
 )
 
-var colorAliases = map[string]api.Color{
-	"blue":   api.Blue,
-	"gray":   api.Gray,
-	"tan":    api.Tan,
-	"yellow": api.Yellow,
-	"lime":   api.Lime,
-	"aqua":   api.Aqua,
-	"violet": api.Violet,
-	"purple": api.Purple,
-	"pink":   api.Pink,
+func buildColorAliases() map[string]api.Color {
+	aliases := make(map[string]api.Color)
+	for _, colorDef := range colors.All {
+		aliases[strings.ToLower(colorDef.Name)] = api.Color(colorDef.CSSValue)
+	}
+	return aliases
+}
+
+func getAvailableColors() string {
+	var names []string
+	for _, colorDef := range colors.All {
+		names = append(names, strings.ToLower(colorDef.Name))
+	}
+	return strings.Join(names, ", ")
 }
 
 var columnCreateCmd = &cobra.Command{
@@ -48,9 +54,10 @@ func handleCreateColumn(cmd *cobra.Command) error {
 	}
 
 	if columnColor != "" {
+		colorAliases := buildColorAliases()
 		color, ok := colorAliases[columnColor]
 		if !ok {
-			return fmt.Errorf("invalid color '%s'. Available colors: blue, gray, tan, yellow, lime, aqua, violet, purple, pink", columnColor)
+			return fmt.Errorf("invalid color '%s'. Available colors: %s", columnColor, getAvailableColors())
 		}
 		payload.Color = &color
 	}
@@ -67,7 +74,7 @@ func handleCreateColumn(cmd *cobra.Command) error {
 func init() {
 	columnCreateCmd.Flags().StringVarP(&columnName, "name", "n", "", "Column name (required)")
 	columnCreateCmd.MarkFlagRequired("name")
-	columnCreateCmd.Flags().StringVar(&columnColor, "color", "", "Column color (optional). Available: blue, gray, tan, yellow, lime, aqua, violet, purple, pink")
+	columnCreateCmd.Flags().StringVar(&columnColor, "color", "", fmt.Sprintf("Column color (optional). Available: %s", getAvailableColors()))
 
 	columnCmd.AddCommand(columnCreateCmd)
 }

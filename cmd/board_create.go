@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	boardName              string
-	boardAllAccess         bool
+	boardName               string
+	boardAllAccess          bool
 	boardAutoPostponePeriod int
-	boardPublicDescription string
+	boardPublicDescription  string
 )
 
 var boardCreateCmd = &cobra.Command{
@@ -37,7 +37,7 @@ func handleCreateBoard(cmd *cobra.Command) error {
 		Name:               boardName,
 		AllAccess:          boardAllAccess,
 		AutoPostponePeriod: boardAutoPostponePeriod,
-		PublicDescription: boardPublicDescription,
+		PublicDescription:  boardPublicDescription,
 	}
 
 	_, err := a.Client.PostBoards(context.Background(), payload)

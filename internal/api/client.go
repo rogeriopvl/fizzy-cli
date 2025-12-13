@@ -9,6 +9,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/rogeriopvl/fizzy-cli/internal/colors"
 )
 
 type Client struct {
@@ -128,14 +130,29 @@ func (c *Client) PostBoards(ctx context.Context, payload CreateBoardPayload) (bo
 	return true, nil
 }
 
+func (c *Client) GetColumns(ctx context.Context) ([]Column, error) {
+	endpointURL := c.boardBaseURL + "/columns"
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create get columns request: %w", err)
+	}
+
+	var response []Column
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 func (c *Client) PostColumns(ctx context.Context, payload CreateColumnPayload) (bool, error) {
 	if c.boardBaseURL == "" {
 		return false, fmt.Errorf("please select a board first with 'fizzy use --board <board_name>'")
 	}
 
 	endpointURL := c.boardBaseURL + "/columns"
-
-	fmt.Println(endpointURL)
 
 	body := map[string]CreateColumnPayload{"column": payload}
 
@@ -186,10 +203,15 @@ type CreateBoardPayload struct {
 }
 
 type Column struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	Color     Color  `json:"color"`
-	CreatedAt string `json:"created_at"`
+	ID        string      `json:"id"`
+	Name      string      `json:"name"`
+	Color     ColorObject `json:"color"`
+	CreatedAt string      `json:"created_at"`
+}
+
+type ColorObject struct {
+	Name  string `json:"name"`
+	Value Color  `json:"value"`
 }
 
 type CreateColumnPayload struct {
@@ -221,14 +243,15 @@ type User struct {
 
 type Color string
 
-const (
-	Blue   Color = "--color-card-default"
-	Gray   Color = "--color-card-1"
-	Tan    Color = "--color-card-2"
-	Yellow Color = "--color-card-3"
-	Lime   Color = "--color-card-4"
-	Aqua   Color = "--color-card-5"
-	Violet Color = "--color-card-6"
-	Purple Color = "--color-card-7"
-	Pink   Color = "--color-card-8"
+// Color constants using centralized definitions
+var (
+	Blue   Color = Color(colors.Blue.CSSValue)
+	Gray   Color = Color(colors.Gray.CSSValue)
+	Tan    Color = Color(colors.Tan.CSSValue)
+	Yellow Color = Color(colors.Yellow.CSSValue)
+	Lime   Color = Color(colors.Lime.CSSValue)
+	Aqua   Color = Color(colors.Aqua.CSSValue)
+	Violet Color = Color(colors.Violet.CSSValue)
+	Purple Color = Color(colors.Purple.CSSValue)
+	Pink   Color = Color(colors.Pink.CSSValue)
 )
