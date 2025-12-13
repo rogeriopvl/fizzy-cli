@@ -14,10 +14,10 @@ import (
 )
 
 type Client struct {
-	baseURL        string
-	accountBaseURL string
-	boardBaseURL   string
-	accessToken    string
+	BaseURL        string
+	AccountBaseURL string
+	BoardBaseURL   string
+	AccessToken    string
 }
 
 func NewClient(accountSlug string, boardID string) (*Client, error) {
@@ -35,10 +35,10 @@ func NewClient(accountSlug string, boardID string) (*Client, error) {
 	}
 
 	return &Client{
-		baseURL:        baseURL,
-		accountBaseURL: accountBaseURL,
-		boardBaseURL:   boardBaseURL,
-		accessToken:    token,
+		BaseURL:        baseURL,
+		AccountBaseURL: accountBaseURL,
+		BoardBaseURL:   boardBaseURL,
+		AccessToken:    token,
 	}, nil
 }
 
@@ -58,7 +58,7 @@ func (c *Client) newRequest(ctx context.Context, method, url string, body any) (
 		return nil, err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.accessToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken))
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
 
@@ -96,7 +96,7 @@ func (c *Client) decodeResponse(req *http.Request, v any, expectedStatus ...int)
 }
 
 func (c *Client) GetBoards(ctx context.Context) ([]Board, error) {
-	endpointURL := c.accountBaseURL + "/boards"
+	endpointURL := c.AccountBaseURL + "/boards"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
 	if err != nil {
@@ -113,7 +113,7 @@ func (c *Client) GetBoards(ctx context.Context) ([]Board, error) {
 }
 
 func (c *Client) PostBoards(ctx context.Context, payload CreateBoardPayload) (bool, error) {
-	endpointURL := c.accountBaseURL + "/boards"
+	endpointURL := c.AccountBaseURL + "/boards"
 
 	body := map[string]CreateBoardPayload{"board": payload}
 
@@ -131,7 +131,7 @@ func (c *Client) PostBoards(ctx context.Context, payload CreateBoardPayload) (bo
 }
 
 func (c *Client) GetColumns(ctx context.Context) ([]Column, error) {
-	endpointURL := c.boardBaseURL + "/columns"
+	endpointURL := c.BoardBaseURL + "/columns"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
 	if err != nil {
@@ -148,11 +148,11 @@ func (c *Client) GetColumns(ctx context.Context) ([]Column, error) {
 }
 
 func (c *Client) PostColumns(ctx context.Context, payload CreateColumnPayload) (bool, error) {
-	if c.boardBaseURL == "" {
+	if c.BoardBaseURL == "" {
 		return false, fmt.Errorf("please select a board first with 'fizzy use --board <board_name>'")
 	}
 
-	endpointURL := c.boardBaseURL + "/columns"
+	endpointURL := c.BoardBaseURL + "/columns"
 
 	body := map[string]CreateColumnPayload{"column": payload}
 
@@ -170,7 +170,7 @@ func (c *Client) PostColumns(ctx context.Context, payload CreateColumnPayload) (
 }
 
 func (c *Client) GetMyIdentity(ctx context.Context) (*GetMyIdentityResponse, error) {
-	endpointURL := c.baseURL + "/my/identity"
+	endpointURL := c.BaseURL + "/my/identity"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
 	if err != nil {
