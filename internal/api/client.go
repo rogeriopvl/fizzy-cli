@@ -173,6 +173,31 @@ func (c *Client) PostColumns(ctx context.Context, payload CreateColumnPayload) (
 	return true, nil
 }
 
+func (c *Client) GetCards(ctx context.Context, filters CardFilters) ([]Card, error) {
+	endpointURL := c.AccountBaseURL + "/cards"
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create get cards request: %w", err)
+	}
+
+	if len(filters.BoardIDs) > 0 {
+		q := req.URL.Query()
+		for _, boardID := range filters.BoardIDs {
+			q.Add("board_ids[]", boardID)
+		}
+		req.URL.RawQuery = q.Encode()
+	}
+
+	var response []Card
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 func (c *Client) GetMyIdentity(ctx context.Context) (*GetMyIdentityResponse, error) {
 	endpointURL := c.BaseURL + "/my/identity"
 
@@ -221,6 +246,39 @@ type ColorObject struct {
 type CreateColumnPayload struct {
 	Name  string `json:"name"`
 	Color *Color `json:"color,omitempty"`
+}
+
+type Card struct {
+	ID              string   `json:"id"`
+	Number          int      `json:"number"`
+	Title           string   `json:"title"`
+	Status          string   `json:"status"`
+	Description     string   `json:"description"`
+	DescriptionHTML string   `json:"description_html"`
+	ImageURL        string   `json:"image_url"`
+	Tags            []string `json:"tags"`
+	Golden          bool     `json:"golden"`
+	LastActiveAt    string   `json:"last_active_at"`
+	CreatedAt       string   `json:"created_at"`
+	URL             string   `json:"url"`
+	Board           Board    `json:"board"`
+	Creator         User     `json:"creator"`
+	CommentsURL     string   `json:"comments_url"`
+}
+
+type CardFilters struct {
+	BoardIDs         []string
+	TagIDs           []string
+	AssigneeIDs      []string
+	CreatorIDs       []string
+	CloserIDs        []string
+	CardIDs          []string
+	IndexedBy        string
+	SortedBy         string
+	AssignmentStatus string
+	CreationStatus   string
+	ClosureStatus    string
+	Terms            []string
 }
 
 type GetMyIdentityResponse struct {
