@@ -198,6 +198,23 @@ func (c *Client) GetCards(ctx context.Context, filters CardFilters) ([]Card, err
 	return response, nil
 }
 
+func (c *Client) GetCard(ctx context.Context, cardNumber string) (*Card, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%s", c.AccountBaseURL, cardNumber)
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create get card by id request: %w", err)
+	}
+
+	var response Card
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
 func (c *Client) GetMyIdentity(ctx context.Context) (*GetMyIdentityResponse, error) {
 	endpointURL := c.BaseURL + "/my/identity"
 
