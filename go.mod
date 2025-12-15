@@ -1,4 +1,4 @@
-module github.com/rogeriopvl/fizzy-cli
+module github.com/rogeriopvl/fizzy
 
 go 1.25.1
 

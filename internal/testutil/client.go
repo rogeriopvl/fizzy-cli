@@ -1,7 +1,7 @@
 // Package testutil
 package testutil
 
-import "github.com/rogeriopvl/fizzy-cli/internal/api"
+import "github.com/rogeriopvl/fizzy/internal/api"
 
 func NewTestClient(baseURL, accountSlug, boardID, accessToken string) *api.Client {
 	accountBaseURL := baseURL + accountSlug

@@ -8,10 +8,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy-cli/internal/api"
-	"github.com/rogeriopvl/fizzy-cli/internal/app"
-	"github.com/rogeriopvl/fizzy-cli/internal/config"
-	"github.com/rogeriopvl/fizzy-cli/internal/testutil"
+	"github.com/rogeriopvl/fizzy/internal/api"
+	"github.com/rogeriopvl/fizzy/internal/app"
+	"github.com/rogeriopvl/fizzy/internal/config"
+	"github.com/rogeriopvl/fizzy/internal/testutil"
 	"github.com/spf13/cobra"
 )
 

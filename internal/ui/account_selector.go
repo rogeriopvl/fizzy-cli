@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/rogeriopvl/fizzy-cli/internal/api"
+	"github.com/rogeriopvl/fizzy/internal/api"
 )
 
 type accountModel struct {

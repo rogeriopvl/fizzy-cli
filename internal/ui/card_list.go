@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy-cli/internal/api"
+	"github.com/rogeriopvl/fizzy/internal/api"
 )
 
 func DisplayCards(cards []api.Card) error {
