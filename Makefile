@@ -1,4 +1,4 @@
-.PHONY: help dev-tools run build build-all clean test
+.PHONY: help dev-tools run build build-all clean test install
 
 help:
 	@echo 'Usage: make [target]'
@@ -12,6 +12,9 @@ dev-tools:
 
 run:
 	go run .
+
+install:
+	go install .
 
 build:
 	go build -o bin/fizzy .
