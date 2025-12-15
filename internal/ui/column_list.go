@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/rogeriopvl/fizzy-cli/internal/api"
-	"github.com/rogeriopvl/fizzy-cli/internal/colors"
+	"github.com/rogeriopvl/fizzy/internal/api"
+	"github.com/rogeriopvl/fizzy/internal/colors"
 )
 
 func DisplayColumns(columns []api.Column) error {

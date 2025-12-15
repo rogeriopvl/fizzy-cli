@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/rogeriopvl/fizzy-cli/internal/colors"
+	"github.com/rogeriopvl/fizzy/internal/colors"
 )
 
 type Client struct {

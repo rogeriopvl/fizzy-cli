@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy-cli/internal/api"
-	"github.com/rogeriopvl/fizzy-cli/internal/app"
-	"github.com/rogeriopvl/fizzy-cli/internal/ui"
+	"github.com/rogeriopvl/fizzy/internal/api"
+	"github.com/rogeriopvl/fizzy/internal/app"
+	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
 )
 

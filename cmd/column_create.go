@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rogeriopvl/fizzy-cli/internal/api"
-	"github.com/rogeriopvl/fizzy-cli/internal/app"
-	"github.com/rogeriopvl/fizzy-cli/internal/colors"
+	"github.com/rogeriopvl/fizzy/internal/api"
+	"github.com/rogeriopvl/fizzy/internal/app"
+	"github.com/rogeriopvl/fizzy/internal/colors"
 	"github.com/spf13/cobra"
 )
 

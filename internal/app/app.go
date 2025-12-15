@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rogeriopvl/fizzy-cli/internal/api"
-	"github.com/rogeriopvl/fizzy-cli/internal/config"
+	"github.com/rogeriopvl/fizzy/internal/api"
+	"github.com/rogeriopvl/fizzy/internal/config"
 )
 
 type App struct {
