@@ -215,6 +215,28 @@ func (c *Client) GetCard(ctx context.Context, cardNumber string) (*Card, error) 
 	return &response, nil
 }
 
+func (c *Client) PostCards(ctx context.Context, payload CreateCardPayload) (bool, error) {
+	if c.BoardBaseURL == "" {
+		return false, fmt.Errorf("please select a board first with 'fizzy use --board <board_name>'")
+	}
+
+	endpointURL := c.BoardBaseURL + "/cards"
+
+	body := map[string]CreateCardPayload{"card": payload}
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, body)
+	if err != nil {
+		return false, fmt.Errorf("failed to create card request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusCreated)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (c *Client) GetMyIdentity(ctx context.Context) (*GetMyIdentityResponse, error) {
 	endpointURL := c.BaseURL + "/my/identity"
 
@@ -296,6 +318,16 @@ type CardFilters struct {
 	CreationStatus   string
 	ClosureStatus    string
 	Terms            []string
+}
+
+type CreateCardPayload struct {
+	Title        string   `json:"title"`
+	Description  string   `json:"description,omitempty"`
+	Status       string   `json:"status,omitempty"`
+	ImageURL     string   `json:"image_url,omitempty"`
+	TagIDS       []string `json:"tag_ids,omitempty"`
+	CreatedAt    string   `json:"created_at,omitempty"`
+	LastActiveAt string   `json:"last_active_at,omitempty"`
 }
 
 type GetMyIdentityResponse struct {
