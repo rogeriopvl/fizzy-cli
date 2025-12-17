@@ -10,13 +10,13 @@ import (
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
-func TestCardCloseCommandSuccess(t *testing.T) {
+func TestCardReopenCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/cards/123/closure" {
 			t.Errorf("expected /cards/123/closure, got %s", r.URL.Path)
 		}
-		if r.Method != http.MethodPost {
-			t.Errorf("expected POST, got %s", r.Method)
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
 		}
 
 		auth := r.Header.Get("Authorization")
@@ -31,21 +31,21 @@ func TestCardCloseCommandSuccess(t *testing.T) {
 	client := testutil.NewTestClient(server.URL, "", "", "test-token")
 	testApp := &app.App{Client: client}
 
-	cmd := cardCloseCmd
+	cmd := cardReopenCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	if err := handleCloseCard(cmd, "123"); err != nil {
-		t.Fatalf("handleCloseCard failed: %v", err)
+	if err := handleReopenCard(cmd, "123"); err != nil {
+		t.Fatalf("handleReopenCard failed: %v", err)
 	}
 }
 
-func TestCardCloseCommandInvalidCardNumber(t *testing.T) {
+func TestCardReopenCommandInvalidCardNumber(t *testing.T) {
 	testApp := &app.App{}
 
-	cmd := cardCloseCmd
+	cmd := cardReopenCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	err := handleCloseCard(cmd, "not-a-number")
+	err := handleReopenCard(cmd, "not-a-number")
 	if err == nil {
 		t.Errorf("expected error for invalid card number")
 	}
@@ -54,13 +54,13 @@ func TestCardCloseCommandInvalidCardNumber(t *testing.T) {
 	}
 }
 
-func TestCardCloseCommandNoClient(t *testing.T) {
+func TestCardReopenCommandNoClient(t *testing.T) {
 	testApp := &app.App{}
 
-	cmd := cardCloseCmd
+	cmd := cardReopenCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	err := handleCloseCard(cmd, "123")
+	err := handleReopenCard(cmd, "123")
 	if err == nil {
 		t.Errorf("expected error when client not available")
 	}
@@ -69,7 +69,7 @@ func TestCardCloseCommandNoClient(t *testing.T) {
 	}
 }
 
-func TestCardCloseCommandAPIError(t *testing.T) {
+func TestCardReopenCommandAPIError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Internal Server Error"))
@@ -79,14 +79,14 @@ func TestCardCloseCommandAPIError(t *testing.T) {
 	client := testutil.NewTestClient(server.URL, "", "", "test-token")
 	testApp := &app.App{Client: client}
 
-	cmd := cardCloseCmd
+	cmd := cardReopenCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	err := handleCloseCard(cmd, "123")
+	err := handleReopenCard(cmd, "123")
 	if err == nil {
 		t.Errorf("expected error for API failure")
 	}
-	if err.Error() != "closing card: unexpected status code 500: Internal Server Error" {
+	if err.Error() != "reopening card: unexpected status code 500: Internal Server Error" {
 		t.Errorf("expected API error, got %v", err)
 	}
 }
