@@ -8,7 +8,7 @@ help:
 
 dev-tools:
 	@echo "Installing development tools..."
-	go install github.com/spf13/cobra@latest
+	go install gotest.tools/gotestsum@latest
 
 run:
 	go run .
