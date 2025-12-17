@@ -55,7 +55,7 @@ Reload the shell, and run the `fizzy login` command again to confirm that you're
 authenticated. If you have only one Fizzy account, `fizzy-cli` will select it
 automatically. Otherwise you will be able to select which one you want to use.
 
-## Board selection
+### Board selection
 
 You can choose which board you want to pre-select for all your commands with:
 
