@@ -1,5 +1,8 @@
 .PHONY: help dev-tools run build build-all clean test install
 
+VERSION := $(shell grep '"version"' package.json | sed 's/.*"version": "\([^"]*\)".*/\1/')
+LDFLAGS := -ldflags="-X 'github.com/rogeriopvl/fizzy/cmd.Version=$(VERSION)'"
+
 help:
 	@echo 'Usage: make [target]'
 	@echo ''
@@ -14,18 +17,18 @@ run:
 	go run .
 
 install:
-	go install .
+	go install $(LDFLAGS) .
 
 build:
-	go build -o bin/fizzy .
+	go build $(LDFLAGS) -o bin/fizzy .
 
 build-all: clean
 	mkdir -p bin
-	GOOS=darwin GOARCH=amd64 go build -o bin/fizzy-darwin-amd64 .
-	GOOS=darwin GOARCH=arm64 go build -o bin/fizzy-darwin-arm64 .
-	GOOS=linux GOARCH=amd64 go build -o bin/fizzy-linux-amd64 .
-	GOOS=linux GOARCH=arm64 go build -o bin/fizzy-linux-arm64 .
-	GOOS=windows GOARCH=amd64 go build -o bin/fizzy-windows-amd64.exe .
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o bin/fizzy-darwin-amd64 .
+	GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o bin/fizzy-darwin-arm64 .
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/fizzy-linux-amd64 .
+	GOOS=linux GOARCH=arm64 go build $(LDFLAGS) -o bin/fizzy-linux-arm64 .
+	GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o bin/fizzy-windows-amd64.exe .
 	@echo "Binaries built successfully in bin/"
 
 clean:
