@@ -1,7 +1,12 @@
 // Package testutil
 package testutil
 
-import "github.com/rogeriopvl/fizzy/internal/api"
+import (
+	"net/http"
+	"time"
+
+	"github.com/rogeriopvl/fizzy/internal/api"
+)
 
 func NewTestClient(baseURL, accountSlug, boardID, accessToken string) *api.Client {
 	accountBaseURL := baseURL + accountSlug
@@ -16,5 +21,6 @@ func NewTestClient(baseURL, accountSlug, boardID, accessToken string) *api.Clien
 		AccountBaseURL: accountBaseURL,
 		BoardBaseURL:   boardURL,
 		AccessToken:    accessToken,
+		HTTPClient:     &http.Client{Timeout: 30 * time.Second},
 	}
 }

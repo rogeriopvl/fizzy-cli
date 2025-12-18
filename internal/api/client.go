@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/rogeriopvl/fizzy/internal/colors"
 )
@@ -18,6 +19,7 @@ type Client struct {
 	AccountBaseURL string
 	BoardBaseURL   string
 	AccessToken    string
+	HTTPClient     *http.Client
 }
 
 func NewClient(accountSlug string, boardID string) (*Client, error) {
@@ -39,6 +41,7 @@ func NewClient(accountSlug string, boardID string) (*Client, error) {
 		AccountBaseURL: accountBaseURL,
 		BoardBaseURL:   boardBaseURL,
 		AccessToken:    token,
+		HTTPClient:     &http.Client{Timeout: 30 * time.Second},
 	}, nil
 }
 
@@ -74,8 +77,7 @@ func (c *Client) decodeResponse(req *http.Request, v any, expectedStatus ...int)
 		expectedCode = expectedStatus[0]
 	}
 
-	client := &http.Client{}
-	res, err := client.Do(req)
+	res, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return 0, fmt.Errorf("failed to make request: %w", err)
 	}
