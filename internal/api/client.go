@@ -114,6 +114,23 @@ func (c *Client) GetBoards(ctx context.Context) ([]Board, error) {
 	return response, nil
 }
 
+func (c *Client) GetBoard(ctx context.Context, boardID string) (*Board, error) {
+	endpointURL := c.AccountBaseURL + "/boards/" + boardID
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	var response Board
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
 func (c *Client) PostBoards(ctx context.Context, payload CreateBoardPayload) (bool, error) {
 	endpointURL := c.AccountBaseURL + "/boards"
 
