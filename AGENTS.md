@@ -11,6 +11,8 @@ All the commands for development are available through Makefile, just read that
 file whenever you need to run something because chances are that you will find
 you answer there.
 
+You can find the Fizzy API specification at @docs/API.md
+
 ## Testing
 
 Automated testing is done via `make test`.

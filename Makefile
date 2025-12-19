@@ -1,4 +1,4 @@
-.PHONY: help dev-tools run build build-all clean test install
+.PHONY: help dev-tools run build build-all clean test install sync-api-spec
 
 VERSION := $(shell grep '"version"' package.json | sed 's/.*"version": "\([^"]*\)".*/\1/')
 LDFLAGS := -ldflags="-X 'github.com/rogeriopvl/fizzy/cmd.Version=$(VERSION)'"
@@ -36,3 +36,8 @@ clean:
 
 test:
 	gotestsum -- -v ./...
+
+sync-api-spec:
+	@mkdir -p docs
+	@curl -s https://raw.githubusercontent.com/basecamp/fizzy/main/docs/API.md -o docs/API.md
+	@echo "API spec synced to docs/API.md"
