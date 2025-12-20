@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
@@ -27,7 +28,12 @@ func handleShowCard(cmd *cobra.Command, cardID string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	card, err := a.Client.GetCard(context.Background(), cardID)
+	cardNumber, err := strconv.Atoi(cardID)
+	if err != nil {
+		return fmt.Errorf("card ID must be a number: %w", err)
+	}
+
+	card, err := a.Client.GetCard(context.Background(), cardNumber)
 	if err != nil {
 		return fmt.Errorf("fetching card: %w", err)
 	}

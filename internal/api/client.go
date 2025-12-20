@@ -217,8 +217,8 @@ func (c *Client) GetCards(ctx context.Context, filters CardFilters) ([]Card, err
 	return response, nil
 }
 
-func (c *Client) GetCard(ctx context.Context, cardNumber string) (*Card, error) {
-	endpointURL := fmt.Sprintf("%s/cards/%s", c.AccountBaseURL, cardNumber)
+func (c *Client) GetCard(ctx context.Context, cardNumber int) (*Card, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d", c.AccountBaseURL, cardNumber)
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
 	if err != nil {
@@ -254,6 +254,25 @@ func (c *Client) PostCards(ctx context.Context, payload CreateCardPayload) (bool
 	}
 
 	return true, nil
+}
+
+func (c *Client) PutCard(ctx context.Context, cardNumber int, payload UpdateCardPayload) (*Card, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d", c.AccountBaseURL, cardNumber)
+
+	body := map[string]UpdateCardPayload{"card": payload}
+
+	req, err := c.newRequest(ctx, http.MethodPut, endpointURL, body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create update card request: %w", err)
+	}
+
+	var response Card
+	_, err = c.decodeResponse(req, &response, http.StatusOK)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
 }
 
 func (c *Client) PostCardsClosure(ctx context.Context, cardNumber int) (bool, error) {
@@ -378,6 +397,15 @@ type CreateCardPayload struct {
 	ImageURL     string   `json:"image_url,omitempty"`
 	TagIDS       []string `json:"tag_ids,omitempty"`
 	CreatedAt    string   `json:"created_at,omitempty"`
+	LastActiveAt string   `json:"last_active_at,omitempty"`
+}
+
+// image not included because we don't support files yet
+type UpdateCardPayload struct {
+	Title        string   `json:"title,omitempty"`
+	Description  string   `json:"description,omitempty"`
+	Status       string   `json:"status,omitempty"`
+	TagIDS       []string `json:"tag_ids,omitempty"`
 	LastActiveAt string   `json:"last_active_at,omitempty"`
 }
 

@@ -14,8 +14,8 @@ import (
 
 func TestCardShowCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/card-123" {
-			t.Errorf("expected /cards/card-123, got %s", r.URL.Path)
+		if r.URL.Path != "/cards/1" {
+			t.Errorf("expected /cards/1, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -49,7 +49,7 @@ func TestCardShowCommand(t *testing.T) {
 	cmd := cardShowCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	if err := handleShowCard(cmd, "card-123"); err != nil {
+	if err := handleShowCard(cmd, "1"); err != nil {
 		t.Fatalf("handleShowCard failed: %v", err)
 	}
 }
@@ -67,7 +67,7 @@ func TestCardShowCommandAPIError(t *testing.T) {
 	cmd := cardShowCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	err := handleShowCard(cmd, "nonexistent-card")
+	err := handleShowCard(cmd, "999")
 	if err == nil {
 		t.Errorf("expected error for API failure")
 	}
@@ -82,7 +82,7 @@ func TestCardShowCommandNoClient(t *testing.T) {
 	cmd := cardShowCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	err := handleShowCard(cmd, "card-123")
+	err := handleShowCard(cmd, "1")
 	if err == nil {
 		t.Errorf("expected error when client not available")
 	}
