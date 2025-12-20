@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1] - 2025-12-20
+
+### Fixes
+
+- NPM package publishing script
+
 ## [0.2.0] - 2025-12-20
 
 ### Features
