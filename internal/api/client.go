@@ -275,6 +275,22 @@ func (c *Client) PutCard(ctx context.Context, cardNumber int, payload UpdateCard
 	return &response, nil
 }
 
+func (c *Client) DeleteCard(ctx context.Context, cardNumber int) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d", c.AccountBaseURL, cardNumber)
+
+	req, err := c.newRequest(ctx, http.MethodDelete, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create delete card request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (c *Client) PostCardsClosure(ctx context.Context, cardNumber int) (bool, error) {
 	endpointURL := fmt.Sprintf("%s/cards/%d/closure", c.AccountBaseURL, cardNumber)
 
@@ -400,7 +416,7 @@ type CreateCardPayload struct {
 	LastActiveAt string   `json:"last_active_at,omitempty"`
 }
 
-// image not included because we don't support files yet
+// UpdateCardPayload image not included because we don't support files yet
 type UpdateCardPayload struct {
 	Title        string   `json:"title,omitempty"`
 	Description  string   `json:"description,omitempty"`
