@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.2.0] - 2025-12-20
+
+### Features
+
+#### Card Management
+
+- `fizzy card update <card_number>` - Update card properties (title, description, status, tags)
+- `fizzy card delete <card_number>` - Delete a card permanently
+- `fizzy card close <card_number>` - Close an existing card (already existed, now documented)
+- `fizzy card reopen <card_number>` - Reopen a closed card (already existed, now documented)
+
+#### Account Management
+
+- `fizzy account list` - List all accounts you have access to
+
+#### Improvements
+
+- `fizzy board` without arguments now displays the currently selected board
+- Added `--version` flag to display CLI version
+- Fixed HTTP client leak in API requests
+- Updated API specification to latest version
+
 ## [0.1.0] - 2025-12-16
 
 ### Initial Release
