@@ -34,7 +34,11 @@ if (!goOS || !goArch) {
 const binaryName = platform === "win32" ? "fizzy.exe" : "fizzy";
 const releaseTag = process.env.FIZZY_RELEASE_TAG || "latest";
 
-const downloadUrl = `https://github.com/rogeriopvl/fizzy-cli/releases/download/${releaseTag}/fizzy-${goOS}-${goArch}${platform === "win32" ? ".exe" : ""}`;
+const binarySuffix = `fizzy-${goOS}-${goArch}${platform === "win32" ? ".exe" : ""}`;
+const downloadUrl =
+  releaseTag === "latest"
+    ? `https://github.com/rogeriopvl/fizzy-cli/releases/latest/download/${binarySuffix}`
+    : `https://github.com/rogeriopvl/fizzy-cli/releases/download/${releaseTag}/${binarySuffix}`;
 
 const binDir = path.join(packageDir, "bin");
 const binaryPath = path.join(binDir, binaryName);

@@ -1,0 +1,2 @@
+# Exclude pre-built binaries - postinstall downloads the correct one
+bin/fizzy-*
