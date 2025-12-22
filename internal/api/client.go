@@ -323,6 +323,24 @@ func (c *Client) DeleteCardsClosure(ctx context.Context, cardNumber int) (bool, 
 	return true, nil
 }
 
+func (c *Client) PostCardAssignments(ctx context.Context, cardNumber int, userID string) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/assignments", c.AccountBaseURL, cardNumber)
+
+	body := map[string]string{"assignee_id": userID}
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, body)
+	if err != nil {
+		return false, fmt.Errorf("failed to create assignment request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (c *Client) GetMyIdentity(ctx context.Context) (*GetMyIdentityResponse, error) {
 	endpointURL := c.BaseURL + "/my/identity"
 

@@ -16,6 +16,7 @@ const (
 type Config struct {
 	SelectedAccount string `json:"selected_account"`
 	SelectedBoard   string `json:"selected_board"`
+	CurrentUserID   string `json:"current_user_id"`
 }
 
 // Load reads the config file from $HOME/.config/fizzy-cli/config.json.

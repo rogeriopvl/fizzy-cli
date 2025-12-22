@@ -47,8 +47,9 @@ func handleLogin(cmd *cobra.Command) error {
 
 	fmt.Printf("\nSelected account: %s (%s)\n", selected.Name, selected.Slug)
 
-	// Save the selected account to config
+	// Save the selected account and current user ID to config
 	a.Config.SelectedAccount = selected.Slug
+	a.Config.CurrentUserID = selected.User.ID
 	if err := a.Config.Save(); err != nil {
 		return fmt.Errorf("saving config: %w", err)
 	}
