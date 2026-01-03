@@ -49,7 +49,6 @@ func TestCardUpdateCommand(t *testing.T) {
 	cmd := cardUpdateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	// Reset flags to defaults
 	updateTitle = "Updated card title"
 	updateDescription = "Updated description"
 	updateStatus = "published"
@@ -130,7 +129,6 @@ func TestCardUpdateCommandNoFlags(t *testing.T) {
 	cmd := cardUpdateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 
-	// Reset all flags
 	updateTitle = ""
 	updateDescription = ""
 	updateStatus = ""

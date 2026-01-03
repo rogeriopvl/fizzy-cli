@@ -41,7 +41,6 @@ func handleUpdateCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	// Validate that at least one field is provided for update
 	if updateTitle == "" && updateDescription == "" && updateStatus == "" && len(updateTagIDs) == 0 && updateLastActiveAt == "" {
 		return fmt.Errorf("must provide at least one flag to update (--title, --description, --status, --tag-id, or --last-active-at)")
 	}

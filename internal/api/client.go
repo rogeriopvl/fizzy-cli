@@ -307,6 +307,24 @@ func (c *Client) PostCardsClosure(ctx context.Context, cardNumber int) (bool, er
 	return true, nil
 }
 
+func (c *Client) PostCardTriage(ctx context.Context, cardNumber int, columnID string) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/triage", c.AccountBaseURL, cardNumber)
+
+	body := map[string]any{"column_id": columnID}
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, body)
+	if err != nil {
+		return false, fmt.Errorf("failed to create post triage request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (c *Client) DeleteCardsClosure(ctx context.Context, cardNumber int) (bool, error) {
 	endpointURL := fmt.Sprintf("%s/cards/%d/closure", c.AccountBaseURL, cardNumber)
 
