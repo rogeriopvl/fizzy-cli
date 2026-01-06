@@ -376,6 +376,23 @@ func (c *Client) GetMyIdentity(ctx context.Context) (*GetMyIdentityResponse, err
 	return &response, nil
 }
 
+func (c *Client) GetNotifications(ctx context.Context) ([]Notification, error) {
+	endpointURL := c.AccountBaseURL + "/notifications"
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create get notifications request: %w", err)
+	}
+
+	var response []Notification
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 type Board struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
@@ -481,6 +498,25 @@ type User struct {
 	Name      string `json:"name"`
 	CreatedAt string `json:"created_at"`
 	URL       string `json:"url"`
+}
+
+type Notification struct {
+	ID        string `json:"id"`
+	Read      bool   `json:"read"`
+	ReadAt    string `json:"read_at"`
+	CreatedAt string `json:"created_at"`
+	Title     string `json:"title"`
+	Body      string `json:"body"`
+	Creator   User   `json:"creator"`
+	Card      CardReference `json:"card"`
+	URL       string `json:"url"`
+}
+
+type CardReference struct {
+	ID     string `json:"id"`
+	Title  string `json:"title"`
+	Status string `json:"status"`
+	URL    string `json:"url"`
 }
 
 type Color string
