@@ -156,3 +156,133 @@ func TestNotificationListCommandNoClient(t *testing.T) {
 		t.Errorf("expected 'client not available' error, got %v", err)
 	}
 }
+
+func TestNotificationListCommandWithReadFilter(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		response := []api.Notification{
+			{
+				ID:        "notif-123",
+				Read:      false,
+				CreatedAt: "2025-01-01T00:00:00Z",
+				Title:     "Unread notification",
+				Body:      "This should be filtered out",
+				Creator: api.User{
+					ID:        "user-123",
+					Name:      "David Heinemeier Hansson",
+					Email:     "david@example.com",
+					Role:      "owner",
+					Active:    true,
+					CreatedAt: "2025-12-05T19:36:35.401Z",
+				},
+				Card: api.CardReference{
+					ID:     "card-123",
+					Title:  "Test card",
+					Status: "published",
+				},
+			},
+			{
+				ID:        "notif-456",
+				Read:      true,
+				ReadAt:    "2025-01-02T00:00:00Z",
+				CreatedAt: "2025-01-01T12:00:00Z",
+				Title:     "Read notification",
+				Body:      "This should be shown",
+				Creator: api.User{
+					ID:        "user-456",
+					Name:      "Jason Fried",
+					Email:     "jason@example.com",
+					Role:      "member",
+					Active:    true,
+					CreatedAt: "2025-12-05T19:36:35.419Z",
+				},
+				Card: api.CardReference{
+					ID:     "card-456",
+					Title:  "Another card",
+					Status: "in_progress",
+				},
+			},
+		}
+		json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := notificationListCmd
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.Flags().Set("read", "true")
+
+	if err := handleListNotifications(cmd); err != nil {
+		t.Fatalf("handleListNotifications failed: %v", err)
+	}
+}
+
+func TestNotificationListCommandWithUnreadFilter(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		response := []api.Notification{
+			{
+				ID:        "notif-123",
+				Read:      false,
+				CreatedAt: "2025-01-01T00:00:00Z",
+				Title:     "Unread notification",
+				Body:      "This should be shown",
+				Creator: api.User{
+					ID:        "user-123",
+					Name:      "David Heinemeier Hansson",
+					Email:     "david@example.com",
+					Role:      "owner",
+					Active:    true,
+					CreatedAt: "2025-12-05T19:36:35.401Z",
+				},
+				Card: api.CardReference{
+					ID:     "card-123",
+					Title:  "Test card",
+					Status: "published",
+				},
+			},
+			{
+				ID:        "notif-456",
+				Read:      true,
+				ReadAt:    "2025-01-02T00:00:00Z",
+				CreatedAt: "2025-01-01T12:00:00Z",
+				Title:     "Read notification",
+				Body:      "This should be filtered out",
+				Creator: api.User{
+					ID:        "user-456",
+					Name:      "Jason Fried",
+					Email:     "jason@example.com",
+					Role:      "member",
+					Active:    true,
+					CreatedAt: "2025-12-05T19:36:35.419Z",
+				},
+				Card: api.CardReference{
+					ID:     "card-456",
+					Title:  "Another card",
+					Status: "in_progress",
+				},
+			},
+		}
+		json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := notificationListCmd
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.Flags().Set("unread", "true")
+
+	if err := handleListNotifications(cmd); err != nil {
+		t.Fatalf("handleListNotifications failed: %v", err)
+	}
+}

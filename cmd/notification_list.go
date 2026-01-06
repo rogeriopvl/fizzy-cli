@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/rogeriopvl/fizzy/internal/api"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
@@ -31,14 +32,38 @@ func handleListNotifications(cmd *cobra.Command) error {
 		return fmt.Errorf("fetching notifications: %w", err)
 	}
 
-	if len(notifications) == 0 {
+	read, _ := cmd.Flags().GetBool("read")
+	unread, _ := cmd.Flags().GetBool("unread")
+
+	filtered := filterNotifications(notifications, read, unread)
+
+	if len(filtered) == 0 {
 		fmt.Println("No notifications found")
 		return nil
 	}
 
-	return ui.DisplayNotifications(notifications)
+	return ui.DisplayNotifications(filtered)
+}
+
+func filterNotifications(notifications []api.Notification, read bool, unread bool) []api.Notification {
+	if !read && !unread {
+		return notifications
+	}
+
+	var filtered []api.Notification
+	for _, notification := range notifications {
+		if read && notification.Read {
+			filtered = append(filtered, notification)
+		} else if unread && !notification.Read {
+			filtered = append(filtered, notification)
+		}
+	}
+
+	return filtered
 }
 
 func init() {
 	notificationCmd.AddCommand(notificationListCmd)
+	notificationListCmd.Flags().BoolP("read", "r", false, "Show only read notifications")
+	notificationListCmd.Flags().BoolP("unread", "u", false, "Show only unread notifications")
 }
