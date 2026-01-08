@@ -393,6 +393,39 @@ func (c *Client) GetNotifications(ctx context.Context) ([]Notification, error) {
 	return response, nil
 }
 
+func (c *Client) GetNotification(ctx context.Context, notificationID string) (*Notification, error) {
+	endpointURL := fmt.Sprintf("%s/notifications/%s", c.AccountBaseURL, notificationID)
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create get notification request: %w", err)
+	}
+
+	var response Notification
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
+func (c *Client) PostNotificationReading(ctx context.Context, notificationID string) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/notifications/%s/reading", c.AccountBaseURL, notificationID)
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create mark notification as read request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 type Board struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
