@@ -426,6 +426,22 @@ func (c *Client) PostNotificationReading(ctx context.Context, notificationID str
 	return true, nil
 }
 
+func (c *Client) DeleteNotificationReading(ctx context.Context, notificationID string) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/notifications/%s/reading", c.AccountBaseURL, notificationID)
+
+	req, err := c.newRequest(ctx, http.MethodDelete, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create delete notification request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 type Board struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
