@@ -13,7 +13,7 @@ import (
 var boardCmd = &cobra.Command{
 	Use:   "board",
 	Short: "Show the currently selected board",
-	Long:  `Display the name and ID of the currently selected board.
+	Long: `Display the name and ID of the currently selected board.
 
 Use subcommands to list, create, or manage boards:
   fizzy board list      List all boards

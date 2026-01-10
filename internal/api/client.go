@@ -550,15 +550,15 @@ type User struct {
 }
 
 type Notification struct {
-	ID        string `json:"id"`
-	Read      bool   `json:"read"`
-	ReadAt    string `json:"read_at"`
-	CreatedAt string `json:"created_at"`
-	Title     string `json:"title"`
-	Body      string `json:"body"`
-	Creator   User   `json:"creator"`
+	ID        string        `json:"id"`
+	Read      bool          `json:"read"`
+	ReadAt    string        `json:"read_at"`
+	CreatedAt string        `json:"created_at"`
+	Title     string        `json:"title"`
+	Body      string        `json:"body"`
+	Creator   User          `json:"creator"`
 	Card      CardReference `json:"card"`
-	URL       string `json:"url"`
+	URL       string        `json:"url"`
 }
 
 type CardReference struct {
