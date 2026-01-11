@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0 - 2026-01-11
+
+### Features
+
+#### Notification Management
+
+- `fizzy notification list` - List all notifications with optional filtering
+- `fizzy notification read <notification_id>` - Mark a notification as read and display it
+- `fizzy notification unread <notification_id>` - Mark a notification as unread
+- `fizzy notification read-all` - Mark all unread notifications as read
+
+#### Card Management
+
+- `fizzy card assign <card_number> <user_id>` - Assign or unassign a user to/from a card
+- `fizzy card triage <card_number> <column_id>` - Move a card from triage into a column
+
 ## [0.2.1] - 2025-12-20
 
 ### Fixes

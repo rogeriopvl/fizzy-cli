@@ -1,6 +1,6 @@
 {
   "name": "fizzy-cli",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "CLI for https://fizzy.do",
   "main": "bin/fizzy",
   "type": "module",
