@@ -442,6 +442,22 @@ func (c *Client) DeleteNotificationReading(ctx context.Context, notificationID s
 	return true, nil
 }
 
+func (c *Client) PostBulkNotificationsReading(ctx context.Context) (bool, error) {
+	endpointURL := c.AccountBaseURL + "/notifications/bulk_reading"
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create bulk notifications reading request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 type Board struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
