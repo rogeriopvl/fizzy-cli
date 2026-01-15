@@ -307,6 +307,22 @@ func (c *Client) PostCardsClosure(ctx context.Context, cardNumber int) (bool, er
 	return true, nil
 }
 
+func (c *Client) PostCardNotNow(ctx context.Context, cardNumber int) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/not_now", c.AccountBaseURL, cardNumber)
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create post not now request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (c *Client) PostCardTriage(ctx context.Context, cardNumber int, columnID string) (bool, error) {
 	endpointURL := fmt.Sprintf("%s/cards/%d/triage", c.AccountBaseURL, cardNumber)
 
