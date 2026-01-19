@@ -1,0 +1,46 @@
+package cmd
+
+import (
+	"context"
+	"fmt"
+	"strconv"
+
+	"github.com/rogeriopvl/fizzy/internal/app"
+	"github.com/spf13/cobra"
+)
+
+var cardUnwatchCmd = &cobra.Command{
+	Use:   "unwatch <card_number>",
+	Short: "Unsubscribe from card notifications",
+	Long:  `Unsubscribe from notifications for an existing card`,
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := handleUnwatchCard(cmd, args[0]); err != nil {
+			fmt.Fprintf(cmd.OutOrStderr(), "Error: %v\n", err)
+		}
+	},
+}
+
+func handleUnwatchCard(cmd *cobra.Command, cardNumber string) error {
+	cardNum, err := strconv.Atoi(cardNumber)
+	if err != nil {
+		return fmt.Errorf("invalid card number: %w", err)
+	}
+
+	a := app.FromContext(cmd.Context())
+	if a == nil || a.Client == nil {
+		return fmt.Errorf("API client not available")
+	}
+
+	_, err = a.Client.DeleteCardWatch(context.Background(), cardNum)
+	if err != nil {
+		return fmt.Errorf("unwatching card: %w", err)
+	}
+
+	fmt.Printf("✓ Stopped watching card #%d\n", cardNum)
+	return nil
+}
+
+func init() {
+	cardCmd.AddCommand(cardUnwatchCmd)
+}
