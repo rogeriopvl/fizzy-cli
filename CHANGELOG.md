@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 - 2026-01-19
+
+### Features
+
+#### Card Management
+
+- `fizzy card not-now <card_number>` - Move a card to "Not Now" status
+- `fizzy card untriage <card_number>` - Send a card back to triage
+- `fizzy card watch <card_number>` - Subscribe to card notifications
+- `fizzy card unwatch <card_number>` - Unsubscribe from card notifications
+- `fizzy card golden <card_number>` - Mark a card as golden
+- `fizzy card ungolden <card_number>` - Remove golden status from a card
+
 ## 0.3.0 - 2026-01-11
 
 ### Features
