@@ -389,6 +389,38 @@ func (c *Client) DeleteCardWatch(ctx context.Context, cardNumber int) (bool, err
 	return true, nil
 }
 
+func (c *Client) PostCardGoldenness(ctx context.Context, cardNumber int) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/goldness", c.AccountBaseURL, cardNumber)
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create post goldness request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (c *Client) DeleteCardGoldenness(ctx context.Context, cardNumber int) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/goldness", c.AccountBaseURL, cardNumber)
+
+	req, err := c.newRequest(ctx, http.MethodDelete, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create delete goldness request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (c *Client) DeleteCardsClosure(ctx context.Context, cardNumber int) (bool, error) {
 	endpointURL := fmt.Sprintf("%s/cards/%d/closure", c.AccountBaseURL, cardNumber)
 
