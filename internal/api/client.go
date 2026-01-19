@@ -341,6 +341,22 @@ func (c *Client) PostCardTriage(ctx context.Context, cardNumber int, columnID st
 	return true, nil
 }
 
+func (c *Client) DeleteCardTriage(ctx context.Context, cardNumber int) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/triage", c.AccountBaseURL, cardNumber)
+
+	req, err := c.newRequest(ctx, http.MethodDelete, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create delete triage request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (c *Client) DeleteCardsClosure(ctx context.Context, cardNumber int) (bool, error) {
 	endpointURL := fmt.Sprintf("%s/cards/%d/closure", c.AccountBaseURL, cardNumber)
 
