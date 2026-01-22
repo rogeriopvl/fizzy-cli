@@ -84,7 +84,10 @@ func (c *Client) decodeResponse(req *http.Request, v any, expectedStatus ...int)
 	defer res.Body.Close()
 
 	if res.StatusCode != expectedCode {
-		body, _ := io.ReadAll(res.Body)
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			return 0, fmt.Errorf("unexpected status code %d (failed to read error response: %w)", res.StatusCode, err)
+		}
 		return 0, fmt.Errorf("unexpected status code %d: %s", res.StatusCode, string(body))
 	}
 
