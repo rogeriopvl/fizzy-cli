@@ -10,14 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	updateTitle        string
-	updateDescription  string
-	updateStatus       string
-	updateTagIDs       []string
-	updateLastActiveAt string
-)
-
 var cardUpdateCmd = &cobra.Command{
 	Use:   "update <card_number>",
 	Short: "Update a card",
@@ -41,16 +33,23 @@ func handleUpdateCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	if updateTitle == "" && updateDescription == "" && updateStatus == "" && len(updateTagIDs) == 0 && updateLastActiveAt == "" {
+	// Read flag values directly from command
+	title, _ := cmd.Flags().GetString("title")
+	description, _ := cmd.Flags().GetString("description")
+	status, _ := cmd.Flags().GetString("status")
+	tagIDs, _ := cmd.Flags().GetStringSlice("tag-id")
+	lastActiveAt, _ := cmd.Flags().GetString("last-active-at")
+
+	if title == "" && description == "" && status == "" && len(tagIDs) == 0 && lastActiveAt == "" {
 		return fmt.Errorf("must provide at least one flag to update (--title, --description, --status, --tag-id, or --last-active-at)")
 	}
 
 	payload := api.UpdateCardPayload{
-		Title:        updateTitle,
-		Description:  updateDescription,
-		Status:       updateStatus,
-		TagIDS:       updateTagIDs,
-		LastActiveAt: updateLastActiveAt,
+		Title:        title,
+		Description:  description,
+		Status:       status,
+		TagIDS:       tagIDs,
+		LastActiveAt: lastActiveAt,
 	}
 
 	card, err := a.Client.PutCard(context.Background(), cardNum, payload)
@@ -63,11 +62,11 @@ func handleUpdateCard(cmd *cobra.Command, cardNumber string) error {
 }
 
 func init() {
-	cardUpdateCmd.Flags().StringVarP(&updateTitle, "title", "t", "", "Card title")
-	cardUpdateCmd.Flags().StringVarP(&updateDescription, "description", "d", "", "Card description")
-	cardUpdateCmd.Flags().StringVar(&updateStatus, "status", "", "Card status")
-	cardUpdateCmd.Flags().StringSliceVar(&updateTagIDs, "tag-id", []string{}, "Tag ID (can be used multiple times)")
-	cardUpdateCmd.Flags().StringVar(&updateLastActiveAt, "last-active-at", "", "Last active timestamp")
+	cardUpdateCmd.Flags().StringP("title", "t", "", "Card title")
+	cardUpdateCmd.Flags().StringP("description", "d", "", "Card description")
+	cardUpdateCmd.Flags().String("status", "", "Card status")
+	cardUpdateCmd.Flags().StringSlice("tag-id", []string{}, "Tag ID (can be used multiple times)")
+	cardUpdateCmd.Flags().String("last-active-at", "", "Last active timestamp")
 
 	cardCmd.AddCommand(cardUpdateCmd)
 }

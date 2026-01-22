@@ -9,13 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	boardName               string
-	boardAllAccess          bool
-	boardAutoPostponePeriod int
-	boardPublicDescription  string
-)
-
 var boardCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new board",
@@ -33,11 +26,17 @@ func handleCreateBoard(cmd *cobra.Command) error {
 		return fmt.Errorf("API client not available")
 	}
 
+	// Read flag values directly from command
+	name, _ := cmd.Flags().GetString("name")
+	allAccess, _ := cmd.Flags().GetBool("all-access")
+	autoPostponePeriod, _ := cmd.Flags().GetInt("auto-postpone-period")
+	publicDescription, _ := cmd.Flags().GetString("description")
+
 	payload := api.CreateBoardPayload{
-		Name:               boardName,
-		AllAccess:          boardAllAccess,
-		AutoPostponePeriod: boardAutoPostponePeriod,
-		PublicDescription:  boardPublicDescription,
+		Name:               name,
+		AllAccess:          allAccess,
+		AutoPostponePeriod: autoPostponePeriod,
+		PublicDescription:  publicDescription,
 	}
 
 	_, err := a.Client.PostBoards(context.Background(), payload)
@@ -45,16 +44,16 @@ func handleCreateBoard(cmd *cobra.Command) error {
 		return fmt.Errorf("creating board: %w", err)
 	}
 
-	fmt.Printf("✓ Board '%s' created successfully\n", boardName)
+	fmt.Printf("✓ Board '%s' created successfully\n", name)
 	return nil
 }
 
 func init() {
-	boardCreateCmd.Flags().StringVarP(&boardName, "name", "n", "", "Board name (required)")
+	boardCreateCmd.Flags().StringP("name", "n", "", "Board name (required)")
 	boardCreateCmd.MarkFlagRequired("name")
-	boardCreateCmd.Flags().BoolVar(&boardAllAccess, "all-access", false, "Allow all access to the board")
-	boardCreateCmd.Flags().IntVar(&boardAutoPostponePeriod, "auto-postpone-period", 0, "Auto postpone period in days")
-	boardCreateCmd.Flags().StringVar(&boardPublicDescription, "description", "", "Public description of the board")
+	boardCreateCmd.Flags().Bool("all-access", false, "Allow all access to the board")
+	boardCreateCmd.Flags().Int("auto-postpone-period", 0, "Auto postpone period in days")
+	boardCreateCmd.Flags().String("description", "", "Public description of the board")
 
 	boardCmd.AddCommand(boardCreateCmd)
 }

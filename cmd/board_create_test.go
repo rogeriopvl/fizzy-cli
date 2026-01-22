@@ -54,11 +54,6 @@ func TestBoardCreateCommandSuccess(t *testing.T) {
 	cmd.SetContext(testApp.ToContext(context.Background()))
 	cmd.ParseFlags([]string{"--name", "Test Board"})
 
-	boardName = "Test Board"
-	boardAllAccess = false
-	boardAutoPostponePeriod = 0
-	boardPublicDescription = ""
-
 	if err := handleCreateBoard(cmd); err != nil {
 		t.Fatalf("handleCreateBoard failed: %v", err)
 	}
@@ -101,11 +96,6 @@ func TestBoardCreateCommandWithAllFlags(t *testing.T) {
 		"--description", "Team project",
 	})
 
-	boardName = "Test Board"
-	boardAllAccess = true
-	boardAutoPostponePeriod = 7
-	boardPublicDescription = "Team project"
-
 	if err := handleCreateBoard(cmd); err != nil {
 		t.Fatalf("handleCreateBoard failed: %v", err)
 	}
@@ -125,11 +115,6 @@ func TestBoardCreateCommandAPIError(t *testing.T) {
 	cmd.SetContext(testApp.ToContext(context.Background()))
 	cmd.ParseFlags([]string{"--name", "Test Board"})
 
-	boardName = "Test Board"
-	boardAllAccess = false
-	boardAutoPostponePeriod = 0
-	boardPublicDescription = ""
-
 	err := handleCreateBoard(cmd)
 	if err == nil {
 		t.Errorf("expected error for API failure")
@@ -145,8 +130,6 @@ func TestBoardCreateCommandNoClient(t *testing.T) {
 	cmd := boardCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 	cmd.ParseFlags([]string{"--name", "Test Board"})
-
-	boardName = "Test Board"
 
 	err := handleCreateBoard(cmd)
 	if err == nil {

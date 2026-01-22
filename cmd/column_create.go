@@ -11,11 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	columnName  string
-	columnColor string
-)
-
 func buildColorAliases() map[string]api.Color {
 	aliases := make(map[string]api.Color)
 	for _, colorDef := range colors.All {
@@ -49,15 +44,19 @@ func handleCreateColumn(cmd *cobra.Command) error {
 		return fmt.Errorf("API client not available")
 	}
 
+	// Read flag values directly from command
+	name, _ := cmd.Flags().GetString("name")
+	colorStr, _ := cmd.Flags().GetString("color")
+
 	payload := api.CreateColumnPayload{
-		Name: columnName,
+		Name: name,
 	}
 
-	if columnColor != "" {
+	if colorStr != "" {
 		colorAliases := buildColorAliases()
-		color, ok := colorAliases[columnColor]
+		color, ok := colorAliases[colorStr]
 		if !ok {
-			return fmt.Errorf("invalid color '%s'. Available colors: %s", columnColor, getAvailableColors())
+			return fmt.Errorf("invalid color '%s'. Available colors: %s", colorStr, getAvailableColors())
 		}
 		payload.Color = &color
 	}
@@ -67,14 +66,14 @@ func handleCreateColumn(cmd *cobra.Command) error {
 		return fmt.Errorf("creating column: %w", err)
 	}
 
-	fmt.Printf("✓ Column '%s' created successfully\n", columnName)
+	fmt.Printf("✓ Column '%s' created successfully\n", name)
 	return nil
 }
 
 func init() {
-	columnCreateCmd.Flags().StringVarP(&columnName, "name", "n", "", "Column name (required)")
+	columnCreateCmd.Flags().StringP("name", "n", "", "Column name (required)")
 	columnCreateCmd.MarkFlagRequired("name")
-	columnCreateCmd.Flags().StringVar(&columnColor, "color", "", fmt.Sprintf("Column color (optional). Available: %s", getAvailableColors()))
+	columnCreateCmd.Flags().String("color", "", fmt.Sprintf("Column color (optional). Available: %s", getAvailableColors()))
 
 	columnCmd.AddCommand(columnCreateCmd)
 }

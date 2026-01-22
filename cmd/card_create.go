@@ -9,16 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	cardTitle        string
-	cardDescription  string
-	cardStatus       string
-	cardImageURL     string
-	cardTagIDs       []string
-	cardCreatedAt    string
-	cardLastActiveAt string
-)
-
 var cardCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new card",
@@ -40,14 +30,23 @@ func handleCreateCard(cmd *cobra.Command) error {
 		return fmt.Errorf("no board selected")
 	}
 
+	// Read flag values directly from command
+	title, _ := cmd.Flags().GetString("title")
+	description, _ := cmd.Flags().GetString("description")
+	status, _ := cmd.Flags().GetString("status")
+	imageURL, _ := cmd.Flags().GetString("image-url")
+	tagIDs, _ := cmd.Flags().GetStringSlice("tag-id")
+	createdAt, _ := cmd.Flags().GetString("created-at")
+	lastActiveAt, _ := cmd.Flags().GetString("last-active-at")
+
 	payload := api.CreateCardPayload{
-		Title:        cardTitle,
-		Description:  cardDescription,
-		Status:       cardStatus,
-		ImageURL:     cardImageURL,
-		TagIDS:       cardTagIDs,
-		CreatedAt:    cardCreatedAt,
-		LastActiveAt: cardLastActiveAt,
+		Title:        title,
+		Description:  description,
+		Status:       status,
+		ImageURL:     imageURL,
+		TagIDS:       tagIDs,
+		CreatedAt:    createdAt,
+		LastActiveAt: lastActiveAt,
 	}
 
 	_, err := a.Client.PostCards(context.Background(), payload)
@@ -55,19 +54,19 @@ func handleCreateCard(cmd *cobra.Command) error {
 		return fmt.Errorf("creating card: %w", err)
 	}
 
-	fmt.Printf("✓ Card '%s' created successfully\n", cardTitle)
+	fmt.Printf("✓ Card '%s' created successfully\n", title)
 	return nil
 }
 
 func init() {
-	cardCreateCmd.Flags().StringVarP(&cardTitle, "title", "t", "", "Card title (required)")
+	cardCreateCmd.Flags().StringP("title", "t", "", "Card title (required)")
 	cardCreateCmd.MarkFlagRequired("title")
-	cardCreateCmd.Flags().StringVarP(&cardDescription, "description", "d", "", "Card description")
-	cardCreateCmd.Flags().StringVar(&cardStatus, "status", "", "Card status")
-	cardCreateCmd.Flags().StringVar(&cardImageURL, "image-url", "", "Card image URL")
-	cardCreateCmd.Flags().StringSliceVar(&cardTagIDs, "tag-id", []string{}, "Tag ID (can be used multiple times)")
-	cardCreateCmd.Flags().StringVar(&cardCreatedAt, "created-at", "", "Creation timestamp")
-	cardCreateCmd.Flags().StringVar(&cardLastActiveAt, "last-active-at", "", "Last active timestamp")
+	cardCreateCmd.Flags().StringP("description", "d", "", "Card description")
+	cardCreateCmd.Flags().String("status", "", "Card status")
+	cardCreateCmd.Flags().String("image-url", "", "Card image URL")
+	cardCreateCmd.Flags().StringSlice("tag-id", []string{}, "Tag ID (can be used multiple times)")
+	cardCreateCmd.Flags().String("created-at", "", "Creation timestamp")
+	cardCreateCmd.Flags().String("last-active-at", "", "Last active timestamp")
 
 	cardCmd.AddCommand(cardCreateCmd)
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/rogeriopvl/fizzy/internal/api"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
+	"github.com/spf13/cobra"
 )
 
 func TestCardUpdateCommand(t *testing.T) {
@@ -48,11 +49,12 @@ func TestCardUpdateCommand(t *testing.T) {
 
 	cmd := cardUpdateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	updateTitle = "Updated card title"
-	updateDescription = "Updated description"
-	updateStatus = "published"
-	updateTagIDs = []string{"updated-tag"}
+	cmd.ParseFlags([]string{
+		"--title", "Updated card title",
+		"--description", "Updated description",
+		"--status", "published",
+		"--tag-id", "updated-tag",
+	})
 
 	if err := handleUpdateCard(cmd, "1"); err != nil {
 		t.Fatalf("handleUpdateCard failed: %v", err)
@@ -71,8 +73,9 @@ func TestCardUpdateCommandAPIError(t *testing.T) {
 
 	cmd := cardUpdateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	updateTitle = "Updated card"
+	cmd.ParseFlags([]string{
+		"--title", "Updated card",
+	})
 
 	err := handleUpdateCard(cmd, "999")
 	if err == nil {
@@ -88,8 +91,9 @@ func TestCardUpdateCommandNoClient(t *testing.T) {
 
 	cmd := cardUpdateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	updateTitle = "Updated card"
+	cmd.ParseFlags([]string{
+		"--title", "Updated card",
+	})
 
 	err := handleUpdateCard(cmd, "1")
 	if err == nil {
@@ -105,8 +109,9 @@ func TestCardUpdateCommandInvalidCardNumber(t *testing.T) {
 
 	cmd := cardUpdateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	updateTitle = "Updated card"
+	cmd.ParseFlags([]string{
+		"--title", "Updated card",
+	})
 
 	err := handleUpdateCard(cmd, "not-a-number")
 	if err == nil {
@@ -118,22 +123,21 @@ func TestCardUpdateCommandInvalidCardNumber(t *testing.T) {
 }
 
 func TestCardUpdateCommandNoFlags(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	}))
-	defer server.Close()
-
-	client := testutil.NewTestClient(server.URL, "", "", "test-token")
+	client := testutil.NewTestClient("http://localhost", "", "", "test-token")
 	testApp := &app.App{Client: client}
 
-	cmd := cardUpdateCmd
-	cmd.SetContext(testApp.ToContext(context.Background()))
+	// Create a fresh command to avoid flag pollution from other tests
+	cmd := &cobra.Command{
+		Use:  "update <card_number>",
+		Args: cobra.ExactArgs(1),
+	}
+	cmd.Flags().String("title", "", "Card title")
+	cmd.Flags().String("description", "", "Card description")
+	cmd.Flags().String("status", "", "Card status")
+	cmd.Flags().StringSlice("tag-id", []string{}, "Tag ID")
+	cmd.Flags().String("last-active-at", "", "Last active timestamp")
 
-	updateTitle = ""
-	updateDescription = ""
-	updateStatus = ""
-	updateTagIDs = []string{}
-	updateLastActiveAt = ""
+	cmd.SetContext(testApp.ToContext(context.Background()))
 
 	err := handleUpdateCard(cmd, "1")
 	if err == nil {

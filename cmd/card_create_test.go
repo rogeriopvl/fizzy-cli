@@ -58,14 +58,10 @@ func TestCardCreateCommandSuccess(t *testing.T) {
 
 	cmd := cardCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	cardTitle = "Implement feature"
-	cardDescription = "A detailed description"
-	cardStatus = ""
-	cardImageURL = ""
-	cardTagIDs = []string{}
-	cardCreatedAt = ""
-	cardLastActiveAt = ""
+	cmd.ParseFlags([]string{
+		"--title", "Implement feature",
+		"--description", "A detailed description",
+	})
 
 	if err := handleCreateCard(cmd); err != nil {
 		t.Fatalf("handleCreateCard failed: %v", err)
@@ -108,14 +104,13 @@ func TestCardCreateCommandWithAllFields(t *testing.T) {
 
 	cmd := cardCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	cardTitle = "Fix bug"
-	cardDescription = ""
-	cardStatus = "in_progress"
-	cardImageURL = "https://example.com/image.jpg"
-	cardTagIDs = []string{"tag-1", "tag-2"}
-	cardCreatedAt = ""
-	cardLastActiveAt = ""
+	cmd.ParseFlags([]string{
+		"--title", "Fix bug",
+		"--status", "in_progress",
+		"--image-url", "https://example.com/image.jpg",
+		"--tag-id", "tag-1",
+		"--tag-id", "tag-2",
+	})
 
 	if err := handleCreateCard(cmd); err != nil {
 		t.Fatalf("handleCreateCard failed: %v", err)
@@ -131,14 +126,9 @@ func TestCardCreateCommandNoBoard(t *testing.T) {
 
 	cmd := cardCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	cardTitle = "Test"
-	cardDescription = ""
-	cardStatus = ""
-	cardImageURL = ""
-	cardTagIDs = []string{}
-	cardCreatedAt = ""
-	cardLastActiveAt = ""
+	cmd.ParseFlags([]string{
+		"--title", "Test",
+	})
 
 	err := handleCreateCard(cmd)
 	if err == nil {
@@ -154,14 +144,9 @@ func TestCardCreateCommandNoClient(t *testing.T) {
 
 	cmd := cardCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	cardTitle = "Test"
-	cardDescription = ""
-	cardStatus = ""
-	cardImageURL = ""
-	cardTagIDs = []string{}
-	cardCreatedAt = ""
-	cardLastActiveAt = ""
+	cmd.ParseFlags([]string{
+		"--title", "Test",
+	})
 
 	err := handleCreateCard(cmd)
 	if err == nil {
@@ -187,14 +172,9 @@ func TestCardCreateCommandAPIError(t *testing.T) {
 
 	cmd := cardCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-
-	cardTitle = "Test"
-	cardDescription = ""
-	cardStatus = ""
-	cardImageURL = ""
-	cardTagIDs = []string{}
-	cardCreatedAt = ""
-	cardLastActiveAt = ""
+	cmd.ParseFlags([]string{
+		"--title", "Test",
+	})
 
 	err := handleCreateCard(cmd)
 	if err == nil {

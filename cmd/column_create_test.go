@@ -57,9 +57,6 @@ func TestColumnCreateCommandSuccess(t *testing.T) {
 	cmd.SetContext(testApp.ToContext(context.Background()))
 	cmd.ParseFlags([]string{"--name", "Todo"})
 
-	columnName = "Todo"
-	columnColor = ""
-
 	if err := handleCreateColumn(cmd); err != nil {
 		t.Fatalf("handleCreateColumn failed: %v", err)
 	}
@@ -97,9 +94,6 @@ func TestColumnCreateCommandWithColor(t *testing.T) {
 	cmd.SetContext(testApp.ToContext(context.Background()))
 	cmd.ParseFlags([]string{"--name", "In Progress", "--color", "lime"})
 
-	columnName = "In Progress"
-	columnColor = "lime"
-
 	if err := handleCreateColumn(cmd); err != nil {
 		t.Fatalf("handleCreateColumn failed: %v", err)
 	}
@@ -112,9 +106,6 @@ func TestColumnCreateCommandInvalidColor(t *testing.T) {
 	cmd := columnCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
 	cmd.ParseFlags([]string{"--name", "Todo", "--color", "invalid"})
-
-	columnName = "Todo"
-	columnColor = "invalid"
 
 	err := handleCreateColumn(cmd)
 	if err == nil {
@@ -136,10 +127,7 @@ func TestColumnCreateCommandNoBoard(t *testing.T) {
 
 	cmd := columnCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-	cmd.ParseFlags([]string{"--name", "Todo"})
-
-	columnName = "Todo"
-	columnColor = ""
+	cmd.ParseFlags([]string{"--name", "Todo", "--color", ""})
 
 	err := handleCreateColumn(cmd)
 	if err == nil {
@@ -155,10 +143,7 @@ func TestColumnCreateCommandNoClient(t *testing.T) {
 
 	cmd := columnCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-	cmd.ParseFlags([]string{"--name", "Todo"})
-
-	columnName = "Todo"
-	columnColor = ""
+	cmd.ParseFlags([]string{"--name", "Todo", "--color", ""})
 
 	err := handleCreateColumn(cmd)
 	if err == nil {
@@ -181,10 +166,7 @@ func TestColumnCreateCommandAPIError(t *testing.T) {
 
 	cmd := columnCreateCmd
 	cmd.SetContext(testApp.ToContext(context.Background()))
-	cmd.ParseFlags([]string{"--name", "Todo"})
-
-	columnName = "Todo"
-	columnColor = ""
+	cmd.ParseFlags([]string{"--name", "Todo", "--color", ""})
 
 	err := handleCreateColumn(cmd)
 	if err == nil {
