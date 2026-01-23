@@ -592,6 +592,23 @@ func (c *Client) GetTags(ctx context.Context) ([]Tag, error) {
 	return response, nil
 }
 
+func (c *Client) GetCardComments(ctx context.Context, cardNumber int) ([]Comment, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/comments", c.AccountBaseURL, cardNumber)
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create get card comments request: %w", err)
+	}
+
+	var response []Comment
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 type Board struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
@@ -723,6 +740,20 @@ type Tag struct {
 	Title     string `json:"title"`
 	CreatedAt string `json:"created_at"`
 	URL       string `json:"url"`
+}
+
+type Comment struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+	Body      struct {
+		PlainText string `json:"plain_text"`
+		HTML      string `json:"html"`
+	} `json:"body"`
+	Creator      User          `json:"creator"`
+	Card         CardReference `json:"card"`
+	ReactionsURL string        `json:"reactions_url"`
+	URL          string        `json:"url"`
 }
 
 type Color string
