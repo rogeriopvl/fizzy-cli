@@ -12,3 +12,14 @@ func DisplayComments(comments []api.Comment) error {
 	}
 	return nil
 }
+
+func DisplayComment(comment *api.Comment) error {
+	fmt.Printf("Author: %s\n", comment.Creator.Name)
+	fmt.Printf("Created: %s\n", comment.CreatedAt)
+	if comment.UpdatedAt != comment.CreatedAt {
+		fmt.Printf("Updated: %s\n", comment.UpdatedAt)
+	}
+	fmt.Printf("Card: %s\n", comment.Card.Title)
+	fmt.Printf("\n%s\n", comment.Body.PlainText)
+	return nil
+}

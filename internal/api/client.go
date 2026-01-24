@@ -609,6 +609,23 @@ func (c *Client) GetCardComments(ctx context.Context, cardNumber int) ([]Comment
 	return response, nil
 }
 
+func (c *Client) GetCardComment(ctx context.Context, cardNumber int, commentID string) (*Comment, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/comments/%s", c.AccountBaseURL, cardNumber, commentID)
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create get card comment request: %w", err)
+	}
+
+	var response Comment
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
 type Board struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
