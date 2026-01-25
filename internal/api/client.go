@@ -626,6 +626,27 @@ func (c *Client) GetCardComment(ctx context.Context, cardNumber int, commentID s
 	return &response, nil
 }
 
+func (c *Client) PostCardComment(ctx context.Context, cardNumber int, body string) (*Comment, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/comments", c.AccountBaseURL, cardNumber)
+
+	payload := map[string]map[string]string{
+		"comment": {"body": body},
+	}
+
+	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, payload)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create post card comment request: %w", err)
+	}
+
+	var response Comment
+	_, err = c.decodeResponse(req, &response, http.StatusCreated)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
 type Board struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
