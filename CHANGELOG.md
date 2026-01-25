@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0 - 2026-01-25
+
+### Features
+
+#### Comment Management
+
+- `fizzy comment list <card_number>` - List all comments on a card
+- `fizzy comment show <card_number> <comment_id>` - Display a specific comment
+- `fizzy comment add <card_number> <body>` - Create a new comment on a card
+
+### Fixes
+
+- Fixed error handling in notification read-all command
+- Removed global flag usage in some commands
+
 ## 0.4.0 - 2026-01-19
 
 ### Features
