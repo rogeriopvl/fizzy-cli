@@ -149,6 +149,13 @@ type Comment struct {
 	URL          string        `json:"url"`
 }
 
+type Reaction struct {
+	ID      string `json:"id"`
+	Content string `json:"content"`
+	Reacter User   `json:"reacter"`
+	URL     string `json:"url"`
+}
+
 type Color string
 
 // Color constants using centralized definitions
