@@ -156,6 +156,12 @@ type Reaction struct {
 	URL     string `json:"url"`
 }
 
+type Step struct {
+	ID        string `json:"id"`
+	Content   string `json:"content"`
+	Completed bool   `json:"completed"`
+}
+
 type Color string
 
 // Color constants using centralized definitions
