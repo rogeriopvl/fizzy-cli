@@ -33,23 +33,33 @@ func handleUpdateCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	// Read flag values directly from command
-	title, _ := cmd.Flags().GetString("title")
-	description, _ := cmd.Flags().GetString("description")
-	status, _ := cmd.Flags().GetString("status")
-	tagIDs, _ := cmd.Flags().GetStringSlice("tag-id")
-	lastActiveAt, _ := cmd.Flags().GetString("last-active-at")
+	// Build payload only with flags that were explicitly set
+	var payload api.UpdateCardPayload
+	hasChanges := false
 
-	if title == "" && description == "" && status == "" && len(tagIDs) == 0 && lastActiveAt == "" {
-		return fmt.Errorf("must provide at least one flag to update (--title, --description, --status, --tag-id, or --last-active-at)")
+	if cmd.Flags().Changed("title") {
+		payload.Title, _ = cmd.Flags().GetString("title")
+		hasChanges = true
+	}
+	if cmd.Flags().Changed("description") {
+		payload.Description, _ = cmd.Flags().GetString("description")
+		hasChanges = true
+	}
+	if cmd.Flags().Changed("status") {
+		payload.Status, _ = cmd.Flags().GetString("status")
+		hasChanges = true
+	}
+	if cmd.Flags().Changed("tag-id") {
+		payload.TagIDS, _ = cmd.Flags().GetStringSlice("tag-id")
+		hasChanges = true
+	}
+	if cmd.Flags().Changed("last-active-at") {
+		payload.LastActiveAt, _ = cmd.Flags().GetString("last-active-at")
+		hasChanges = true
 	}
 
-	payload := api.UpdateCardPayload{
-		Title:        title,
-		Description:  description,
-		Status:       status,
-		TagIDS:       tagIDs,
-		LastActiveAt: lastActiveAt,
+	if !hasChanges {
+		return fmt.Errorf("must provide at least one flag to update (--title, --description, --status, --tag-id, or --last-active-at)")
 	}
 
 	card, err := a.Client.PutCard(context.Background(), cardNum, payload)
