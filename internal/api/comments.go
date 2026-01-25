@@ -60,3 +60,24 @@ func (c *Client) PostCardComment(ctx context.Context, cardNumber int, body strin
 
 	return &response, nil
 }
+
+func (c *Client) PutCardComment(ctx context.Context, cardNumber int, commentID string, body string) (*Comment, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/comments/%s", c.AccountBaseURL, cardNumber, commentID)
+
+	payload := map[string]map[string]string{
+		"comment": {"body": body},
+	}
+
+	req, err := c.newRequest(ctx, http.MethodPut, endpointURL, payload)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create put card comment request: %w", err)
+	}
+
+	var response Comment
+	_, err = c.decodeResponse(req, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
