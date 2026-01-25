@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.6.0 - 2026-01-25
+
+### Features
+
+#### Reaction Management
+
+- `fizzy reaction list <card_number> <comment_id>` - List all reactions on a comment
+- `fizzy reaction add <card_number> <comment_id> <emoji>` - Add a reaction to a comment
+- `fizzy reaction remove <card_number> <comment_id> <reaction_id>` - Remove a reaction from a comment
+
+#### Step Management
+
+- `fizzy step create <card_number> --content <text> [--completed]` - Create a new step on a card
+- `fizzy step update <card_number> <step_id> [--content <text>] [--completed]` - Update a step
+- `fizzy step delete <card_number> <step_id>` - Delete a step from a card
+
+#### Comment Management
+
+- `fizzy comment delete <card_number> <comment_id>` - Delete a comment from a card
+- `fizzy comment update <card_number> <comment_id> --body <text>` - Update a comment on a card
+
+### Improvements
+
+- Refactored API client logic into separate files for better organization
+- Enhanced card update command to use `Flags().Changed()` for better flag handling
+- Comprehensive test coverage for all new commands (168 tests total)
+
 ## 0.5.0 - 2026-01-25
 
 ### Features
