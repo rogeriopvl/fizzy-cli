@@ -81,3 +81,19 @@ func (c *Client) PutCardComment(ctx context.Context, cardNumber int, commentID s
 
 	return &response, nil
 }
+
+func (c *Client) DeleteCardComment(ctx context.Context, cardNumber int, commentID string) (bool, error) {
+	endpointURL := fmt.Sprintf("%s/cards/%d/comments/%s", c.AccountBaseURL, cardNumber, commentID)
+
+	req, err := c.newRequest(ctx, http.MethodDelete, endpointURL, nil)
+	if err != nil {
+		return false, fmt.Errorf("failed to create delete card comment request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
