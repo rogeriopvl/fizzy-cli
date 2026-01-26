@@ -42,6 +42,11 @@ type CreateColumnPayload struct {
 	Color *Color `json:"color,omitempty"`
 }
 
+type UpdateColumnPayload struct {
+	Name  string `json:"name,omitempty"`
+	Color *Color `json:"color,omitempty"`
+}
+
 type Card struct {
 	ID              string   `json:"id"`
 	Number          int      `json:"number"`
