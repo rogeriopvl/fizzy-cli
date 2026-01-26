@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -38,13 +39,20 @@ func (c *Client) PostCardStep(ctx context.Context, cardNumber int, content strin
 		return nil, fmt.Errorf("failed to create post card step request: %w", err)
 	}
 
-	var response Step
-	_, err = c.decodeResponse(req, &response, http.StatusCreated)
+	res, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to make request: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusCreated {
+		body, _ := io.ReadAll(res.Body)
+		return nil, fmt.Errorf("unexpected status code %d: %s", res.StatusCode, string(body))
 	}
 
-	return &response, nil
+	// API returns 201 Created with Location header, not a response body
+	// Return a Step object with the content field set for reference
+	return &Step{Content: content, Completed: completed}, nil
 }
 
 func (c *Client) PutCardStep(ctx context.Context, cardNumber int, stepID string, content *string, completed *bool) (*Step, error) {

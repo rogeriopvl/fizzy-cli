@@ -35,12 +35,12 @@ func handleCreateStep(cmd *cobra.Command, cardNumber string) error {
 	content, _ := cmd.Flags().GetString("content")
 	completed, _ := cmd.Flags().GetBool("completed")
 
-	step, err := a.Client.PostCardStep(context.Background(), cardNum, content, completed)
+	_, err = a.Client.PostCardStep(context.Background(), cardNum, content, completed)
 	if err != nil {
 		return fmt.Errorf("creating step: %w", err)
 	}
 
-	fmt.Printf("✓ Step created successfully (id: %s)\n", step.ID)
+	fmt.Printf("✓ Step created successfully\n")
 	return nil
 }
 

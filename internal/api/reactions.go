@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -35,13 +36,20 @@ func (c *Client) PostCommentReaction(ctx context.Context, cardNumber int, commen
 		return nil, fmt.Errorf("failed to create post comment reaction request: %w", err)
 	}
 
-	var response Reaction
-	_, err = c.decodeResponse(req, &response, http.StatusCreated)
+	res, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to make request: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusCreated {
+		body, _ := io.ReadAll(res.Body)
+		return nil, fmt.Errorf("unexpected status code %d: %s", res.StatusCode, string(body))
 	}
 
-	return &response, nil
+	// API returns 201 Created with Location header, not a response body
+	// Return a Reaction object with the content field set for reference
+	return &Reaction{Content: content}, nil
 }
 
 func (c *Client) DeleteCommentReaction(ctx context.Context, cardNumber int, commentID string, reactionID string) (bool, error) {

@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -52,13 +53,21 @@ func (c *Client) PostCardComment(ctx context.Context, cardNumber int, body strin
 		return nil, fmt.Errorf("failed to create post card comment request: %w", err)
 	}
 
-	var response Comment
-	_, err = c.decodeResponse(req, &response, http.StatusCreated)
+	res, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to make request: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusCreated {
+		body, _ := io.ReadAll(res.Body)
+		return nil, fmt.Errorf("unexpected status code %d: %s", res.StatusCode, string(body))
 	}
 
-	return &response, nil
+	// API returns 201 Created with Location header, not a response body
+	// Return a minimal Comment object with empty fields
+	// The comment ID would be in the Location header but we'll use it to fetch full details
+	return &Comment{}, nil
 }
 
 func (c *Client) PutCardComment(ctx context.Context, cardNumber int, commentID string, body string) (*Comment, error) {
