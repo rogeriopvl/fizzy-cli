@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.7.0 - 2026-01-26
+
+### Features
+
+#### Board Management
+
+- `fizzy board show <board_id>` - Display details for a specific board
+- `fizzy board update <board_id>` - Update board properties (name, access, auto-postpone period)
+- `fizzy board delete <board_id>` - Delete a board
+
+#### Column Management
+
+- `fizzy column show <column_id>` - Display details for a specific column
+- `fizzy column update <column_id>` - Update column properties (name, color)
+- `fizzy column delete <column_id>` - Delete a column
+
+### Improvements
+
+- Improved command output testability by using consistent output writers
+
 ## 0.6.1 - 2026-01-26
 
 ### Fixes
