@@ -57,3 +57,37 @@ func (c *Client) PostBoards(ctx context.Context, payload CreateBoardPayload) (bo
 
 	return true, nil
 }
+
+func (c *Client) PutBoard(ctx context.Context, boardID string, payload UpdateBoardPayload) error {
+	endpointURL := c.AccountBaseURL + "/boards/" + boardID
+
+	body := map[string]UpdateBoardPayload{"board": payload}
+
+	req, err := c.newRequest(ctx, http.MethodPut, endpointURL, body)
+	if err != nil {
+		return fmt.Errorf("failed to create update board request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) DeleteBoard(ctx context.Context, boardID string) error {
+	endpointURL := c.AccountBaseURL + "/boards/" + boardID
+
+	req, err := c.newRequest(ctx, http.MethodDelete, endpointURL, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create delete board request: %w", err)
+	}
+
+	_, err = c.decodeResponse(req, nil, http.StatusNoContent)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

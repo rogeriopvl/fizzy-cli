@@ -18,6 +18,13 @@ type CreateBoardPayload struct {
 	PublicDescription  string `json:"public_description"`
 }
 
+type UpdateBoardPayload struct {
+	Name               string `json:"name,omitempty"`
+	AllAccess          *bool  `json:"all_access,omitempty"`
+	AutoPostponePeriod *int   `json:"auto_postpone_period,omitempty"`
+	PublicDescription  string `json:"public_description,omitempty"`
+}
+
 type Column struct {
 	ID        string      `json:"id"`
 	Name      string      `json:"name"`
