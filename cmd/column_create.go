@@ -66,7 +66,7 @@ func handleCreateColumn(cmd *cobra.Command) error {
 		return fmt.Errorf("creating column: %w", err)
 	}
 
-	fmt.Printf("✓ Column '%s' created successfully\n", name)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Column '%s' created successfully\n", name)
 	return nil
 }
 

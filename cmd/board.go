@@ -40,7 +40,7 @@ func handleShowBoard(cmd *cobra.Command) error {
 		return fmt.Errorf("fetching board: %w", err)
 	}
 
-	fmt.Printf("%s (%s)\n", board.Name, ui.DisplayID(board.ID))
+	fmt.Fprintf(cmd.OutOrStdout(), "%s (%s)\n", board.Name, ui.DisplayID(board.ID))
 	return nil
 }
 

@@ -37,7 +37,7 @@ func handleDeleteStep(cmd *cobra.Command, cardNumber, stepID string) error {
 		return fmt.Errorf("deleting step: %w", err)
 	}
 
-	fmt.Printf("✓ Step deleted successfully\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Step deleted successfully\n")
 	return nil
 }
 

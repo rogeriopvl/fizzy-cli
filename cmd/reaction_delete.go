@@ -37,7 +37,7 @@ func handleDeleteReaction(cmd *cobra.Command, cardNumber, commentID, reactionID 
 		return fmt.Errorf("deleting reaction: %w", err)
 	}
 
-	fmt.Printf("✓ Reaction deleted successfully\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Reaction deleted successfully\n")
 	return nil
 }
 

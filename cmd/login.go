@@ -25,10 +25,10 @@ var loginCmd = &cobra.Command{
 func handleLogin(cmd *cobra.Command) error {
 	token, isSet := os.LookupEnv("FIZZY_ACCESS_TOKEN")
 	if !isSet || token == "" {
-		return printAuthInstructions()
+		return printAuthInstructions(cmd)
 	}
 
-	fmt.Printf("✓ Authenticated with access token: %s\n", token[:6]+"...")
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Authenticated with access token: %s\n", token[:6]+"...")
 
 	a := app.FromContext(cmd.Context())
 	if a == nil || a.Client == nil {
@@ -40,12 +40,12 @@ func handleLogin(cmd *cobra.Command) error {
 		return fmt.Errorf("fetching identity: %w", err)
 	}
 
-	selected, err := chooseAccount(identity.Accounts)
+	selected, err := chooseAccount(cmd, identity.Accounts)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("\nSelected account: %s (%s)\n", selected.Name, selected.Slug)
+	fmt.Fprintf(cmd.OutOrStdout(), "\nSelected account: %s (%s)\n", selected.Name, selected.Slug)
 
 	// Save the selected account and current user ID to config
 	a.Config.SelectedAccount = selected.Slug
@@ -57,22 +57,22 @@ func handleLogin(cmd *cobra.Command) error {
 	return nil
 }
 
-func chooseAccount(accounts []api.Account) (api.Account, error) {
+func chooseAccount(cmd *cobra.Command, accounts []api.Account) (api.Account, error) {
 	if len(accounts) == 1 {
 		selected := accounts[0]
 		return selected, nil
 	}
 
-	fmt.Println("\nAvailable accounts:")
+	fmt.Fprintf(cmd.OutOrStdout(), "\nAvailable accounts:\n")
 	return ui.SelectAccount(accounts)
 }
 
-func printAuthInstructions() error {
-	fmt.Println("To authenticate with Fizzy's API you need an access token.")
-	fmt.Printf("\nGo to https://app.fizzy.do/<account_slug>/my/access_tokens and follow the instructions...\n")
-	fmt.Println("(Replace <account_slug> with your account slug)")
-	fmt.Printf("\nThen export it as an environment variable in your shell, with the name FIZZY_ACCESS_TOKEN\n")
-	fmt.Println("And re-run this command.")
+func printAuthInstructions(cmd *cobra.Command) error {
+	fmt.Fprintf(cmd.OutOrStdout(), "To authenticate with Fizzy's API you need an access token.\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "\nGo to https://app.fizzy.do/<account_slug>/my/access_tokens and follow the instructions...\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "(Replace <account_slug> with your account slug)\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "\nThen export it as an environment variable in your shell, with the name FIZZY_ACCESS_TOKEN\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "And re-run this command.\n")
 	return nil
 }
 

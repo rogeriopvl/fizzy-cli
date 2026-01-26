@@ -37,7 +37,7 @@ func handleUntriagedCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("sending card back to triage: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d sent back to triage successfully\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d sent back to triage successfully\n", cardNum)
 	return nil
 }
 

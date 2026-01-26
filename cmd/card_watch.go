@@ -37,7 +37,7 @@ func handleWatchCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("watching card: %w", err)
 	}
 
-	fmt.Printf("✓ Now watching card #%d\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Now watching card #%d\n", cardNum)
 	return nil
 }
 

@@ -37,7 +37,7 @@ func handleUngoldenCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("removing golden status: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d golden status removed\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d golden status removed\n", cardNum)
 	return nil
 }
 

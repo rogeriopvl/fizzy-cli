@@ -39,7 +39,7 @@ func handleCreateComment(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("creating comment: %w", err)
 	}
 
-	fmt.Printf("✓ Comment created successfully\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Comment created successfully\n")
 	return nil
 }
 

@@ -67,7 +67,7 @@ func handleUpdateCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("updating card: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d updated successfully\n", card.Number)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d updated successfully\n", card.Number)
 	return nil
 }
 

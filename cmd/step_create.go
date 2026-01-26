@@ -40,7 +40,7 @@ func handleCreateStep(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("creating step: %w", err)
 	}
 
-	fmt.Printf("✓ Step created successfully\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Step created successfully\n")
 	return nil
 }
 

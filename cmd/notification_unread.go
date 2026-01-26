@@ -35,7 +35,7 @@ func handleUnreadNotification(cmd *cobra.Command, notificationID string) error {
 		return fmt.Errorf("marking notification as unread: %w", err)
 	}
 
-	fmt.Printf("✓ Notification marked as unread successfully\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Notification marked as unread successfully\n")
 	return nil
 }
 

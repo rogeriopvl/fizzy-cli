@@ -39,7 +39,7 @@ func handleUpdateComment(cmd *cobra.Command, cardNumber, commentID string) error
 		return fmt.Errorf("updating comment: %w", err)
 	}
 
-	fmt.Printf("✓ Comment updated successfully (id: %s)\n", comment.ID)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Comment updated successfully (id: %s)\n", comment.ID)
 	return nil
 }
 

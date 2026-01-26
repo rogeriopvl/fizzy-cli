@@ -54,7 +54,7 @@ func handleUpdateStep(cmd *cobra.Command, cardNumber, stepID string) error {
 		return fmt.Errorf("updating step: %w", err)
 	}
 
-	fmt.Printf("✓ Step updated successfully (id: %s)\n", step.ID)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Step updated successfully (id: %s)\n", step.ID)
 	return nil
 }
 

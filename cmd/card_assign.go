@@ -46,7 +46,7 @@ func handleAssignCard(cmd *cobra.Command, cardNumber, userID string) error {
 		return fmt.Errorf("assigning card: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d assignment toggled for user %s\n", cardNum, userID)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d assignment toggled for user %s\n", cardNum, userID)
 	return nil
 }
 

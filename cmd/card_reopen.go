@@ -37,7 +37,7 @@ func handleReopenCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("reopening card: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d reopened successfully\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d reopened successfully\n", cardNum)
 	return nil
 }
 

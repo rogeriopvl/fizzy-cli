@@ -37,7 +37,7 @@ func handleTriageCard(cmd *cobra.Command, cardNumber string, columnID string) er
 		return fmt.Errorf("triaging card: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d moved to column successfully\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d moved to column successfully\n", cardNum)
 	return nil
 }
 

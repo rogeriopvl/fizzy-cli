@@ -37,7 +37,7 @@ func handleGoldenCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("marking card as golden: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d marked as golden\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d marked as golden\n", cardNum)
 	return nil
 }
 

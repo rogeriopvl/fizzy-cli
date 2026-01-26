@@ -37,7 +37,7 @@ func handleNotNowCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("moving card to not now: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d moved to Not Now successfully\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d moved to Not Now successfully\n", cardNum)
 	return nil
 }
 

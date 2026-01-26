@@ -37,7 +37,7 @@ func handleCreateReaction(cmd *cobra.Command, cardNumber, commentID, emoji strin
 		return fmt.Errorf("creating reaction: %w", err)
 	}
 
-	fmt.Printf("✓ Reaction %s created successfully\n", emoji)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Reaction %s created successfully\n", emoji)
 	return nil
 }
 

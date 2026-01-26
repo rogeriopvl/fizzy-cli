@@ -54,7 +54,7 @@ func handleCreateCard(cmd *cobra.Command) error {
 		return fmt.Errorf("creating card: %w", err)
 	}
 
-	fmt.Printf("✓ Card '%s' created successfully\n", title)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card '%s' created successfully\n", title)
 	return nil
 }
 

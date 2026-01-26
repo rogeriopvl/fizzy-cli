@@ -37,7 +37,7 @@ func handleDeleteCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("deleting card: %w", err)
 	}
 
-	fmt.Printf("✓ Card #%d deleted successfully\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Card #%d deleted successfully\n", cardNum)
 	return nil
 }
 

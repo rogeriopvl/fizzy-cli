@@ -37,7 +37,7 @@ func handleDeleteComment(cmd *cobra.Command, cardNumber, commentID string) error
 		return fmt.Errorf("deleting comment: %w", err)
 	}
 
-	fmt.Printf("✓ Comment deleted successfully\n")
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Comment deleted successfully\n")
 	return nil
 }
 

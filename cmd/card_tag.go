@@ -42,7 +42,7 @@ func handleTagCard(cmd *cobra.Command, cardNumber, tagTitle string) error {
 		return fmt.Errorf("toggling tag on card: %w", err)
 	}
 
-	fmt.Printf("✓ Tag '%s' toggled on card #%d\n", tagTitle, cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Tag '%s' toggled on card #%d\n", tagTitle, cardNum)
 	return nil
 }
 

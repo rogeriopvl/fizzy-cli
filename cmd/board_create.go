@@ -44,7 +44,7 @@ func handleCreateBoard(cmd *cobra.Command) error {
 		return fmt.Errorf("creating board: %w", err)
 	}
 
-	fmt.Printf("✓ Board '%s' created successfully\n", name)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Board '%s' created successfully\n", name)
 	return nil
 }
 

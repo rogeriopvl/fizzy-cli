@@ -37,7 +37,7 @@ func handleUnwatchCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("unwatching card: %w", err)
 	}
 
-	fmt.Printf("✓ Stopped watching card #%d\n", cardNum)
+	fmt.Fprintf(cmd.OutOrStdout(), "✓ Stopped watching card #%d\n", cardNum)
 	return nil
 }
 
