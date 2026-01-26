@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.1 - 2026-01-26
+
+### Fixes
+
+- Fixed API client to not parse empty responses from POST endpoints, this was
+  causing the create sub-command of comment, reaction and step to show an error
+  message, even though the resource was actually created on the API.
+
 ## 0.6.0 - 2026-01-25
 
 ### Features
