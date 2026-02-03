@@ -121,6 +121,11 @@ type User struct {
 	URL       string `json:"url"`
 }
 
+type UpdateUserPayload struct {
+	Name   string `json:"name,omitempty"`
+	Avatar string `json:"avatar,omitempty"`
+}
+
 type Notification struct {
 	ID        string        `json:"id"`
 	Read      bool          `json:"read"`
