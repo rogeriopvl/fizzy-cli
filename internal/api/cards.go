@@ -14,13 +14,47 @@ func (c *Client) GetCards(ctx context.Context, filters CardFilters) ([]Card, err
 		return nil, fmt.Errorf("failed to create get cards request: %w", err)
 	}
 
-	if len(filters.BoardIDs) > 0 {
-		q := req.URL.Query()
-		for _, boardID := range filters.BoardIDs {
-			q.Add("board_ids[]", boardID)
-		}
-		req.URL.RawQuery = q.Encode()
+	q := req.URL.Query()
+
+	for _, boardID := range filters.BoardIDs {
+		q.Add("board_ids[]", boardID)
 	}
+	for _, tagID := range filters.TagIDs {
+		q.Add("tag_ids[]", tagID)
+	}
+	for _, assigneeID := range filters.AssigneeIDs {
+		q.Add("assignee_ids[]", assigneeID)
+	}
+	for _, creatorID := range filters.CreatorIDs {
+		q.Add("creator_ids[]", creatorID)
+	}
+	for _, closerID := range filters.CloserIDs {
+		q.Add("closer_ids[]", closerID)
+	}
+	for _, cardID := range filters.CardIDs {
+		q.Add("card_ids[]", cardID)
+	}
+	for _, term := range filters.Terms {
+		q.Add("terms[]", term)
+	}
+
+	if filters.IndexedBy != "" {
+		q.Set("indexed_by", filters.IndexedBy)
+	}
+	if filters.SortedBy != "" {
+		q.Set("sorted_by", filters.SortedBy)
+	}
+	if filters.AssignmentStatus != "" {
+		q.Set("assignment_status", filters.AssignmentStatus)
+	}
+	if filters.CreationStatus != "" {
+		q.Set("creation", filters.CreationStatus)
+	}
+	if filters.ClosureStatus != "" {
+		q.Set("closure", filters.ClosureStatus)
+	}
+
+	req.URL.RawQuery = q.Encode()
 
 	var response []Card
 	_, err = c.decodeResponse(req, &response)

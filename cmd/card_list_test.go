@@ -11,7 +11,24 @@ import (
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/config"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
+	"github.com/spf13/cobra"
 )
+
+func newCardListCmd() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().StringSliceP("tag", "t", []string{}, "Filter by tag ID (can be used multiple times)")
+	cmd.Flags().StringSliceP("assignee", "a", []string{}, "Filter by assignee user ID (can be used multiple times)")
+	cmd.Flags().StringSlice("creator", []string{}, "Filter by creator user ID (can be used multiple times)")
+	cmd.Flags().StringSlice("closer", []string{}, "Filter by closer user ID (can be used multiple times)")
+	cmd.Flags().StringSlice("card", []string{}, "Filter to specific card ID (can be used multiple times)")
+	cmd.Flags().String("indexed-by", "", "Filter by status: all, closed, not_now, stalled, postponing_soon, golden")
+	cmd.Flags().String("sorted-by", "", "Sort order: latest, newest, oldest")
+	cmd.Flags().BoolP("unassigned", "u", false, "Show only unassigned cards")
+	cmd.Flags().String("created-in", "", "Filter by creation date")
+	cmd.Flags().String("closed-in", "", "Filter by closure date")
+	cmd.Flags().StringSliceP("search", "s", []string{}, "Search terms (can be used multiple times)")
+	return cmd
+}
 
 func TestCardListCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -144,5 +161,213 @@ func TestCardListCommandNoClient(t *testing.T) {
 	}
 	if err.Error() != "API client not available" {
 		t.Errorf("expected 'client not available' error, got %v", err)
+	}
+}
+
+func TestCardListCommandWithTagFilter(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tagIDs := r.URL.Query()["tag_ids[]"]
+		if len(tagIDs) != 2 || tagIDs[0] != "tag-123" || tagIDs[1] != "tag-456" {
+			t.Errorf("expected tag_ids[]=tag-123&tag_ids[]=tag-456, got %v", tagIDs)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]api.Card{})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := newCardListCmd()
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--tag", "tag-123", "--tag", "tag-456"})
+
+	if err := handleListCards(cmd); err != nil {
+		t.Fatalf("handleListCards failed: %v", err)
+	}
+}
+
+func TestCardListCommandWithAssigneeFilter(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assigneeIDs := r.URL.Query()["assignee_ids[]"]
+		if len(assigneeIDs) != 1 || assigneeIDs[0] != "user-123" {
+			t.Errorf("expected assignee_ids[]=user-123, got %v", assigneeIDs)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]api.Card{})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := newCardListCmd()
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--assignee", "user-123"})
+
+	if err := handleListCards(cmd); err != nil {
+		t.Fatalf("handleListCards failed: %v", err)
+	}
+}
+
+func TestCardListCommandWithIndexedByFilter(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		indexedBy := r.URL.Query().Get("indexed_by")
+		if indexedBy != "closed" {
+			t.Errorf("expected indexed_by=closed, got %s", indexedBy)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]api.Card{})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := newCardListCmd()
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--indexed-by", "closed"})
+
+	if err := handleListCards(cmd); err != nil {
+		t.Fatalf("handleListCards failed: %v", err)
+	}
+}
+
+func TestCardListCommandWithSortedByFilter(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sortedBy := r.URL.Query().Get("sorted_by")
+		if sortedBy != "newest" {
+			t.Errorf("expected sorted_by=newest, got %s", sortedBy)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]api.Card{})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := newCardListCmd()
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--sorted-by", "newest"})
+
+	if err := handleListCards(cmd); err != nil {
+		t.Fatalf("handleListCards failed: %v", err)
+	}
+}
+
+func TestCardListCommandWithUnassignedFilter(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assignmentStatus := r.URL.Query().Get("assignment_status")
+		if assignmentStatus != "unassigned" {
+			t.Errorf("expected assignment_status=unassigned, got %s", assignmentStatus)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]api.Card{})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := newCardListCmd()
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--unassigned"})
+
+	if err := handleListCards(cmd); err != nil {
+		t.Fatalf("handleListCards failed: %v", err)
+	}
+}
+
+func TestCardListCommandWithSearchFilter(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		terms := r.URL.Query()["terms[]"]
+		if len(terms) != 2 || terms[0] != "bug" || terms[1] != "critical" {
+			t.Errorf("expected terms[]=bug&terms[]=critical, got %v", terms)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]api.Card{})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := newCardListCmd()
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--search", "bug", "--search", "critical"})
+
+	if err := handleListCards(cmd); err != nil {
+		t.Fatalf("handleListCards failed: %v", err)
+	}
+}
+
+func TestCardListCommandWithMultipleFilters(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		boardIDs := r.URL.Query()["board_ids[]"]
+		if len(boardIDs) == 0 || boardIDs[0] != "board-123" {
+			t.Errorf("expected board_ids[]=board-123, got %v", boardIDs)
+		}
+
+		tagIDs := r.URL.Query()["tag_ids[]"]
+		if len(tagIDs) != 1 || tagIDs[0] != "tag-123" {
+			t.Errorf("expected tag_ids[]=tag-123, got %v", tagIDs)
+		}
+
+		assigneeIDs := r.URL.Query()["assignee_ids[]"]
+		if len(assigneeIDs) != 1 || assigneeIDs[0] != "user-456" {
+			t.Errorf("expected assignee_ids[]=user-456, got %v", assigneeIDs)
+		}
+
+		sortedBy := r.URL.Query().Get("sorted_by")
+		if sortedBy != "latest" {
+			t.Errorf("expected sorted_by=latest, got %s", sortedBy)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]api.Card{})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "board-123", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "board-123"},
+	}
+
+	cmd := newCardListCmd()
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{
+		"--tag", "tag-123",
+		"--assignee", "user-456",
+		"--sorted-by", "latest",
+	})
+
+	if err := handleListCards(cmd); err != nil {
+		t.Fatalf("handleListCards failed: %v", err)
 	}
 }
