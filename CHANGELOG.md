@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.8.0 - 2026-02-11
+
+### Features
+
+#### Card Management
+
+- `fizzy card list` now supports filtering by board, tags, assignees, creators, and closure status
+- Enhanced card listing with additional query parameters for better filtering capabilities
+
+#### Reaction Management
+
+- `fizzy reaction list <card_number>` - List all reactions on a card
+- `fizzy reaction create <card_number> <emoji>` - Add a reaction to a card
+- `fizzy reaction delete <card_number> <reaction_id>` - Remove a reaction from a card
+
+#### User Management
+
+- `fizzy user list` - List all users in the account
+- `fizzy user show <user_id>` - Display details for a specific user
+- `fizzy user update <user_id>` - Update user properties (name, avatar)
+- `fizzy user deactivate <user_id>` - Deactivate a user account
+
+### Improvements
+
+- Updated API specification to latest version
+
 ## 0.7.0 - 2026-01-26
 
 ### Features
