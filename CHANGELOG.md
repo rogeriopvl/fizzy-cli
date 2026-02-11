@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.0 - 2026-02-11
+
+### Features
+
+#### Identity Management
+
+- `fizzy whoami` - Display current user identity and available accounts
+
 ## 0.8.0 - 2026-02-11
 
 ### Features
