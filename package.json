@@ -9,6 +9,7 @@
   },
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
+    "prepack": "rm -f bin/fizzy bin/fizzy.exe",
     "build": "make build-all"
   },
   "repository": {

@@ -1,2 +1,12 @@
-# Exclude pre-built binaries - postinstall downloads the correct one
-bin/fizzy-*
+# Exclude build artifacts and dev files
+bin/**
+.git
+.github
+.env
+cmd/
+internal/
+go.mod
+go.sum
+Makefile
+AGENTS.md
+CHANGELOG.md
