@@ -84,7 +84,7 @@ func handleListCards(cmd *cobra.Command) error {
 		filters.AssignmentStatus = "unassigned"
 	}
 
-	cards, err := a.Client.GetCards(context.Background(), filters)
+	cards, err := a.Client.GetCards(context.Background(), &filters)
 	if err != nil {
 		return fmt.Errorf("fetching cards: %w", err)
 	}

@@ -62,7 +62,7 @@ func handleUpdateCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("must provide at least one flag to update (--title, --description, --status, --tag-id, or --last-active-at)")
 	}
 
-	card, err := a.Client.PutCard(context.Background(), cardNum, payload)
+	card, err := a.Client.PutCard(context.Background(), cardNum, &payload)
 	if err != nil {
 		return fmt.Errorf("updating card: %w", err)
 	}

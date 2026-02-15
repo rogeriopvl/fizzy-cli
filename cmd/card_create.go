@@ -49,7 +49,7 @@ func handleCreateCard(cmd *cobra.Command) error {
 		LastActiveAt: lastActiveAt,
 	}
 
-	_, err := a.Client.PostCards(context.Background(), payload)
+	_, err := a.Client.PostCards(context.Background(), &payload)
 	if err != nil {
 		return fmt.Errorf("creating card: %w", err)
 	}

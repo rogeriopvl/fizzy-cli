@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetCards(ctx context.Context, filters CardFilters) ([]Card, error) {
+func (c *Client) GetCards(ctx context.Context, filters *CardFilters) ([]Card, error) {
 	endpointURL := c.AccountBaseURL + "/cards"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
@@ -82,14 +82,14 @@ func (c *Client) GetCard(ctx context.Context, cardNumber int) (*Card, error) {
 	return &response, nil
 }
 
-func (c *Client) PostCards(ctx context.Context, payload CreateCardPayload) (bool, error) {
+func (c *Client) PostCards(ctx context.Context, payload *CreateCardPayload) (bool, error) {
 	if c.BoardBaseURL == "" {
 		return false, fmt.Errorf("please select a board first with 'fizzy use --board <board_name>'")
 	}
 
 	endpointURL := c.BoardBaseURL + "/cards"
 
-	body := map[string]CreateCardPayload{"card": payload}
+	body := map[string]*CreateCardPayload{"card": payload}
 
 	req, err := c.newRequest(ctx, http.MethodPost, endpointURL, body)
 	if err != nil {
@@ -104,10 +104,10 @@ func (c *Client) PostCards(ctx context.Context, payload CreateCardPayload) (bool
 	return true, nil
 }
 
-func (c *Client) PutCard(ctx context.Context, cardNumber int, payload UpdateCardPayload) (*Card, error) {
+func (c *Client) PutCard(ctx context.Context, cardNumber int, payload *UpdateCardPayload) (*Card, error) {
 	endpointURL := fmt.Sprintf("%s/cards/%d", c.AccountBaseURL, cardNumber)
 
-	body := map[string]UpdateCardPayload{"card": payload}
+	body := map[string]*UpdateCardPayload{"card": payload}
 
 	req, err := c.newRequest(ctx, http.MethodPut, endpointURL, body)
 	if err != nil {
