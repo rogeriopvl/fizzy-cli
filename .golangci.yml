@@ -1,56 +1,56 @@
-run:
-  timeout: 5m
-
+version: "2"
 linters:
   enable:
-    - errcheck      # Check for unchecked errors
-    - govet         # Reports suspicious constructs
-    - staticcheck   # Static analysis checks
-    - unused        # Finds unused code
-    - gosimple      # Simplify code suggestions
-    - ineffassign   # Detects ineffective assignments
-    - typecheck     # Type-checking
-    - gosec         # Security problems
-    - gocritic      # Opinionated linter with many checks
-    - misspell      # Finds misspelled words
-    - nilerr        # Finds returning nil after checking error
-    - errorlint     # Finds issues with error wrapping
-
-linters-settings:
-  errcheck:
-    check-type-assertions: false  # Type assertions with ok pattern are fine
-    exclude-functions:
-      - fmt.Fprintf
-      - fmt.Printf
-      - fmt.Print
-      - fmt.Fprintln
-      - fmt.Println
-      - (io.Writer).Write
-      - (*github.com/spf13/cobra.Command).MarkFlagRequired
-      - (*github.com/spf13/cobra.Command).ParseFlags
-      - (*encoding/json.Encoder).Encode
-      - encoding/json.Unmarshal
-  gosec:
-    excludes:
-      - G104  # Allow unhandled errors in deferred Close() calls
-      - G301  # Config directory 0755 is acceptable
-      - G304  # File paths from user home dir are safe
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - performance
-    disabled-checks:
-      - singleCaseSwitch   # Acceptable pattern for type switches
-      - rangeValCopy       # Minor optimization, not critical
-      - commentedOutCode   # Allow commented code for reference
-
+    - errorlint
+    - gocritic
+    - gosec
+    - misspell
+    - nilerr
+  settings:
+    errcheck:
+      check-type-assertions: false
+      exclude-functions:
+        - fmt.Fprintf
+        - fmt.Printf
+        - fmt.Print
+        - fmt.Fprintln
+        - fmt.Println
+        - (io.Writer).Write
+        - (*github.com/spf13/cobra.Command).MarkFlagRequired
+        - (*github.com/spf13/cobra.Command).ParseFlags
+        - (*encoding/json.Encoder).Encode
+        - encoding/json.Unmarshal
+    gocritic:
+      disabled-checks:
+        - singleCaseSwitch
+        - rangeValCopy
+        - commentedOutCode
+      enabled-tags:
+        - diagnostic
+        - performance
+    gosec:
+      excludes:
+        - G104
+        - G301
+        - G304
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - errcheck
+        source: defer.*Close\(\)
+    paths:
+      - .*_test\.go$
+      - third_party$
+      - builtin$
+      - examples$
 issues:
-  exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
-  exclude-files:
-    - ".*_test\\.go$"  # Exclude test files from strict linting
-  exclude-rules:
-    - linters:
-        - errcheck
-      source: "defer.*Close\\(\\)"  # Deferred Close() errors are acceptable
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
