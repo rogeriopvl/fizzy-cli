@@ -21,6 +21,7 @@ func NewTestClient(baseURL, accountSlug, boardID, accessToken string) *api.Clien
 		AccountBaseURL: accountBaseURL,
 		BoardBaseURL:   boardURL,
 		AccessToken:    accessToken,
+		UserAgent:      "fizzy-cli/test",
 		HTTPClient:     &http.Client{Timeout: 30 * time.Second},
 	}
 }

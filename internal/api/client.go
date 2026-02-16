@@ -17,10 +17,11 @@ type Client struct {
 	AccountBaseURL string
 	BoardBaseURL   string
 	AccessToken    string
+	UserAgent      string
 	HTTPClient     *http.Client
 }
 
-func NewClient(accountSlug string, boardID string) (*Client, error) {
+func NewClient(accountSlug string, boardID string, version string) (*Client, error) {
 	baseURL := "https://app.fizzy.do"
 	accountBaseURL := baseURL + accountSlug
 
@@ -39,6 +40,7 @@ func NewClient(accountSlug string, boardID string) (*Client, error) {
 		AccountBaseURL: accountBaseURL,
 		BoardBaseURL:   boardBaseURL,
 		AccessToken:    token,
+		UserAgent:      "rogeriopvl/fizzy-cli " + version,
 		HTTPClient:     &http.Client{Timeout: 30 * time.Second},
 	}, nil
 }
@@ -59,9 +61,10 @@ func (c *Client) newRequest(ctx context.Context, method, url string, body any) (
 		return nil, err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.AccessToken))
+	req.Header.Set("Authorization", "Bearer "+c.AccessToken)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", c.UserAgent)
 
 	return req, nil
 }

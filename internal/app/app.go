@@ -15,7 +15,7 @@ type App struct {
 	Config *config.Config
 }
 
-func New() (*App, error) {
+func New(version string) (*App, error) {
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, fmt.Errorf("loading config: %w", err)
@@ -26,7 +26,7 @@ func New() (*App, error) {
 		return &App{Config: cfg}, nil // No token set, app will handle gracefully
 	}
 
-	client, err := api.NewClient(cfg.SelectedAccount, cfg.SelectedBoard)
+	client, err := api.NewClient(cfg.SelectedAccount, cfg.SelectedBoard, version)
 	if err != nil {
 		return nil, fmt.Errorf("creating API client: %w", err)
 	}

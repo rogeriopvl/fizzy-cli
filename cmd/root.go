@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 	Long:    `Fizzy CLI`,
 	Version: Version,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		a, _ := app.New()
+		a, _ := app.New(Version)
 		if a != nil {
 			cmd.SetContext(a.ToContext(cmd.Context()))
 		}
