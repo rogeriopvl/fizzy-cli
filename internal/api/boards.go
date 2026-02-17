@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetBoards(ctx context.Context) ([]Board, error) {
+func (c *Client) GetBoards(ctx context.Context, opts *ListOptions) ([]Board, error) {
 	endpointURL := c.AccountBaseURL + "/boards"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
@@ -14,13 +14,12 @@ func (c *Client) GetBoards(ctx context.Context) ([]Board, error) {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	var response []Board
-	_, err = c.decodeResponse(req, &response)
-	if err != nil {
-		return nil, err
+	limit := 0
+	if opts != nil {
+		limit = opts.Limit
 	}
 
-	return response, nil
+	return fetchAllPages[Board](ctx, c, req, limit)
 }
 
 func (c *Client) GetBoard(ctx context.Context, boardID string) (*Board, error) {

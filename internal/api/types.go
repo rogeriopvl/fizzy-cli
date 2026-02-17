@@ -78,6 +78,7 @@ type CardFilters struct {
 	CreationStatus   string
 	ClosureStatus    string
 	Terms            []string
+	Limit            int // Maximum number of results to return (0 = no limit)
 }
 
 type CreateCardPayload struct {

@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetCardComments(ctx context.Context, cardNumber int) ([]Comment, error) {
+func (c *Client) GetCardComments(ctx context.Context, cardNumber int, opts *ListOptions) ([]Comment, error) {
 	endpointURL := fmt.Sprintf("%s/cards/%d/comments", c.AccountBaseURL, cardNumber)
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
@@ -15,13 +15,12 @@ func (c *Client) GetCardComments(ctx context.Context, cardNumber int) ([]Comment
 		return nil, fmt.Errorf("failed to create get card comments request: %w", err)
 	}
 
-	var response []Comment
-	_, err = c.decodeResponse(req, &response)
-	if err != nil {
-		return nil, err
+	limit := 0
+	if opts != nil {
+		limit = opts.Limit
 	}
 
-	return response, nil
+	return fetchAllPages[Comment](ctx, c, req, limit)
 }
 
 func (c *Client) GetCardComment(ctx context.Context, cardNumber int, commentID string) (*Comment, error) {

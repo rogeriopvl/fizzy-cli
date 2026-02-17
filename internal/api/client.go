@@ -12,6 +12,12 @@ import (
 	"time"
 )
 
+// Response wraps an HTTP response with pagination info
+type Response struct {
+	StatusCode int
+	NextURL    string // URL for next page, empty if no more pages
+}
+
 type Client struct {
 	BaseURL        string
 	AccountBaseURL string
@@ -72,7 +78,8 @@ func (c *Client) newRequest(ctx context.Context, method, url string, body any) (
 // decodeResponse executes a request and decodes the JSON response into v
 // If expectedStatus is 0, it defaults to http.StatusOK
 // If v is nil, the response body is not decoded
-func (c *Client) decodeResponse(req *http.Request, v any, expectedStatus ...int) (int, error) {
+// Returns Response with status code and pagination info
+func (c *Client) decodeResponse(req *http.Request, v any, expectedStatus ...int) (*Response, error) {
 	expectedCode := http.StatusOK
 	if len(expectedStatus) > 0 {
 		expectedCode = expectedStatus[0]
@@ -80,23 +87,26 @@ func (c *Client) decodeResponse(req *http.Request, v any, expectedStatus ...int)
 
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return 0, fmt.Errorf("failed to make request: %w", err)
+		return nil, fmt.Errorf("failed to make request: %w", err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != expectedCode {
 		body, err := io.ReadAll(res.Body)
 		if err != nil {
-			return 0, fmt.Errorf("unexpected status code %d (failed to read error response: %w)", res.StatusCode, err)
+			return nil, fmt.Errorf("unexpected status code %d (failed to read error response: %w)", res.StatusCode, err)
 		}
-		return 0, fmt.Errorf("unexpected status code %d: %s", res.StatusCode, string(body))
+		return nil, fmt.Errorf("unexpected status code %d: %s", res.StatusCode, string(body))
 	}
 
 	if v != nil {
 		if err := json.NewDecoder(res.Body).Decode(v); err != nil {
-			return 0, fmt.Errorf("failed to decode response: %w", err)
+			return nil, fmt.Errorf("failed to decode response: %w", err)
 		}
 	}
 
-	return res.StatusCode, nil
+	return &Response{
+		StatusCode: res.StatusCode,
+		NextURL:    parseNextLink(res.Header.Get("Link")),
+	}, nil
 }

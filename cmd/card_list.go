@@ -26,7 +26,8 @@ Filter options:
   --unassigned        Show only unassigned cards
   --created-in        Filter by creation date: today, yesterday, thisweek, lastweek, thismonth, lastmonth, thisyear, lastyear
   --closed-in         Filter by closure date: today, yesterday, thisweek, lastweek, thismonth, lastmonth, thisyear, lastyear
-  --search            Search terms (can be used multiple times)`,
+  --search            Search terms (can be used multiple times)
+  --limit             Maximum number of cards to return (0 = no limit, fetches all pages)`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := handleListCards(cmd); err != nil {
 			fmt.Fprintf(cmd.OutOrStderr(), "Error: %v\n", err)
@@ -84,6 +85,10 @@ func handleListCards(cmd *cobra.Command) error {
 		filters.AssignmentStatus = "unassigned"
 	}
 
+	if limit, _ := cmd.Flags().GetInt("limit"); limit > 0 {
+		filters.Limit = limit
+	}
+
 	cards, err := a.Client.GetCards(context.Background(), &filters)
 	if err != nil {
 		return fmt.Errorf("fetching cards: %w", err)
@@ -109,6 +114,7 @@ func init() {
 	cardListCmd.Flags().String("created-in", "", "Filter by creation date")
 	cardListCmd.Flags().String("closed-in", "", "Filter by closure date")
 	cardListCmd.Flags().StringSliceP("search", "s", []string{}, "Search terms (can be used multiple times)")
+	cardListCmd.Flags().IntP("limit", "l", 0, "Maximum number of cards to return (0 = no limit)")
 
 	cardCmd.AddCommand(cardListCmd)
 }

@@ -43,7 +43,7 @@ func handleUse(cmd *cobra.Command) error {
 			return fmt.Errorf("API client not available")
 		}
 
-		boards, err := a.Client.GetBoards(context.Background())
+		boards, err := a.Client.GetBoards(context.Background(), nil)
 		if err != nil {
 			return fmt.Errorf("fetching boards: %w", err)
 		}

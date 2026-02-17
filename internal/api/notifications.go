@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetNotifications(ctx context.Context) ([]Notification, error) {
+func (c *Client) GetNotifications(ctx context.Context, opts *ListOptions) ([]Notification, error) {
 	endpointURL := c.AccountBaseURL + "/notifications"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpointURL, nil)
@@ -14,13 +14,12 @@ func (c *Client) GetNotifications(ctx context.Context) ([]Notification, error) {
 		return nil, fmt.Errorf("failed to create get notifications request: %w", err)
 	}
 
-	var response []Notification
-	_, err = c.decodeResponse(req, &response)
-	if err != nil {
-		return nil, err
+	limit := 0
+	if opts != nil {
+		limit = opts.Limit
 	}
 
-	return response, nil
+	return fetchAllPages[Notification](ctx, c, req, limit)
 }
 
 func (c *Client) GetNotification(ctx context.Context, notificationID string) (*Notification, error) {

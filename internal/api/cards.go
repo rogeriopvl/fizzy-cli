@@ -56,13 +56,7 @@ func (c *Client) GetCards(ctx context.Context, filters *CardFilters) ([]Card, er
 
 	req.URL.RawQuery = q.Encode()
 
-	var response []Card
-	_, err = c.decodeResponse(req, &response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+	return fetchAllPages[Card](ctx, c, req, filters.Limit)
 }
 
 func (c *Client) GetCard(ctx context.Context, cardNumber int) (*Card, error) {

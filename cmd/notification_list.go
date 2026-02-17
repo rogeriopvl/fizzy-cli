@@ -27,7 +27,12 @@ func handleListNotifications(cmd *cobra.Command) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	notifications, err := a.Client.GetNotifications(context.Background())
+	opts := &api.ListOptions{}
+	if limit, _ := cmd.Flags().GetInt("limit"); limit > 0 {
+		opts.Limit = limit
+	}
+
+	notifications, err := a.Client.GetNotifications(context.Background(), opts)
 	if err != nil {
 		return fmt.Errorf("fetching notifications: %w", err)
 	}
@@ -66,4 +71,5 @@ func init() {
 	notificationCmd.AddCommand(notificationListCmd)
 	notificationListCmd.Flags().BoolP("read", "r", false, "Show only read notifications")
 	notificationListCmd.Flags().BoolP("unread", "u", false, "Show only unread notifications")
+	notificationListCmd.Flags().IntP("limit", "l", 0, "Maximum number of notifications to return (0 = no limit)")
 }

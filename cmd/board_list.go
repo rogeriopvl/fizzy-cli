@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/rogeriopvl/fizzy/internal/api"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
@@ -26,7 +27,12 @@ func handleListBoards(cmd *cobra.Command) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	boards, err := a.Client.GetBoards(context.Background())
+	opts := &api.ListOptions{}
+	if limit, _ := cmd.Flags().GetInt("limit"); limit > 0 {
+		opts.Limit = limit
+	}
+
+	boards, err := a.Client.GetBoards(context.Background(), opts)
 	if err != nil {
 		return fmt.Errorf("fetching boards: %w", err)
 	}
@@ -40,5 +46,6 @@ func handleListBoards(cmd *cobra.Command) error {
 }
 
 func init() {
+	boardListCmd.Flags().IntP("limit", "l", 0, "Maximum number of boards to return (0 = no limit)")
 	boardCmd.AddCommand(boardListCmd)
 }

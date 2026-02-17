@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/rogeriopvl/fizzy/internal/api"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
@@ -33,7 +34,12 @@ func handleListComments(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	comments, err := a.Client.GetCardComments(context.Background(), cardNum)
+	opts := &api.ListOptions{}
+	if limit, _ := cmd.Flags().GetInt("limit"); limit > 0 {
+		opts.Limit = limit
+	}
+
+	comments, err := a.Client.GetCardComments(context.Background(), cardNum, opts)
 	if err != nil {
 		return fmt.Errorf("fetching comments: %w", err)
 	}
@@ -47,5 +53,6 @@ func handleListComments(cmd *cobra.Command, cardNumber string) error {
 }
 
 func init() {
+	commentListCmd.Flags().IntP("limit", "l", 0, "Maximum number of comments to return (0 = no limit)")
 	commentCmd.AddCommand(commentListCmd)
 }
