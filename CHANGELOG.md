@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.0.0 - 2026-02-17
+
+### Features
+
+#### Pagination Support
+
+- All list commands now automatically fetch all pages of results
+- Added `--limit` / `-l` flag to `card list`, `board list`, `notification list`, and `comment list` to cap results
+
+#### Logout Command
+
+- `fizzy logout` - Clear saved configuration and log out
+
+### Improvements
+
+- Added `User-Agent` header to all API requests for better request identification
+- Improved config file security with stricter permissions (0600)
+- Added golangci-lint configuration for code quality enforcement
+- Performance optimization: large structs now passed by pointer
+
+### Internal
+
+- Migrated golangci-lint config to v2 format
+- Added comprehensive pagination test suite
+
 ## 0.9.0 - 2026-02-11
 
 ### Features
