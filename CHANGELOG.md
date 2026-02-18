@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1 - 2026-02-18
+
+### Fixes
+
+- Added missing `Closed`, `Column`, and `Steps` fields to Card struct
+- Card display now shows `Closed` status, `Column` name, and `Steps` checklist
+
 ## 1.0.0 - 2026-02-17
 
 ### Features
