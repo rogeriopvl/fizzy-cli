@@ -57,6 +57,9 @@ type Card struct {
 	ImageURL        string   `json:"image_url"`
 	Tags            []string `json:"tags"`
 	Golden          bool     `json:"golden"`
+	Closed          bool     `json:"closed"`
+	Column          *Column  `json:"column,omitempty"`
+	Steps           []Step   `json:"steps"`
 	LastActiveAt    string   `json:"last_active_at"`
 	CreatedAt       string   `json:"created_at"`
 	URL             string   `json:"url"`
