@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -34,7 +34,7 @@ func handleUpdateCard(cmd *cobra.Command, cardNumber string) error {
 	}
 
 	// Build payload only with flags that were explicitly set
-	var payload api.UpdateCardPayload
+	var payload fizzy.UpdateCardPayload
 	hasChanges := false
 
 	if cmd.Flags().Changed("title") {
@@ -62,7 +62,7 @@ func handleUpdateCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("must provide at least one flag to update (--title, --description, --status, --tag-id, or --last-active-at)")
 	}
 
-	card, err := a.Client.PutCard(context.Background(), cardNum, &payload)
+	card, err := a.Client.UpdateCard(context.Background(), cardNum, payload)
 	if err != nil {
 		return fmt.Errorf("updating card: %w", err)
 	}

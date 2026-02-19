@@ -7,15 +7,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestCommentShowCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/123/comments/comment-456" {
-			t.Errorf("expected /cards/123/comments/comment-456, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/123/comments/comment-456" {
+			t.Errorf("expected /test-account/cards/123/comments/comment-456, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -27,12 +27,12 @@ func TestCommentShowCommandSuccess(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.Comment{
+		response := fizzy.Comment{
 			ID:        "comment-456",
 			CreatedAt: "2025-01-01T00:00:00Z",
 			UpdatedAt: "2025-01-01T00:00:00Z",
-			Creator:   api.User{ID: "user-1", Name: "John Doe"},
-			Card:      api.CardReference{ID: "card-123", Title: "Test Card"},
+			Creator:   fizzy.User{ID: "user-1", Name: "John Doe"},
+			Card:      fizzy.CardReference{ID: "card-123", Title: "Test Card"},
 		}
 		response.Body.PlainText = "This is a test comment"
 		response.Body.HTML = "<p>This is a test comment</p>"

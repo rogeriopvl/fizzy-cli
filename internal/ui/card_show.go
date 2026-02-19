@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayCard(card *api.Card) error {
+func DisplayCard(card *fizzy.Card) error {
 	boldStyle := lipgloss.NewStyle().Bold(true)
 	dimStyle := lipgloss.NewStyle().Bold(true).Faint(true)
 	fmt.Printf("%s\n", boldStyle.Render(fmt.Sprintf("%s (#%d)", card.Title, card.Number)))

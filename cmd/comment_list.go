@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
@@ -34,7 +34,7 @@ func handleListComments(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	opts := &api.ListOptions{}
+	opts := &fizzy.ListOptions{}
 	if limit, _ := cmd.Flags().GetInt("limit"); limit > 0 {
 		opts.Limit = limit
 	}

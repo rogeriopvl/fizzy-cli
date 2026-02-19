@@ -5,6 +5,7 @@ go 1.25.1
 require (
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
+	github.com/rogeriopvl/fizzy-go v0.1.0
 	github.com/spf13/cobra v1.10.2
 )
 

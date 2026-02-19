@@ -32,7 +32,7 @@ func handleGoldenCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.PostCardGoldenness(context.Background(), cardNum)
+	err = a.Client.MarkCardGolden(context.Background(), cardNum)
 	if err != nil {
 		return fmt.Errorf("marking card as golden: %w", err)
 	}

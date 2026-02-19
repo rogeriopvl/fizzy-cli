@@ -32,7 +32,7 @@ func handleDeleteStep(cmd *cobra.Command, cardNumber, stepID string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.DeleteCardStep(context.Background(), cardNum, stepID)
+	err = a.Client.DeleteCardStep(context.Background(), cardNum, stepID)
 	if err != nil {
 		return fmt.Errorf("deleting step: %w", err)
 	}

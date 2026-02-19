@@ -12,8 +12,8 @@ import (
 
 func TestCardUnwatchCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/123/watch" {
-			t.Errorf("expected /cards/123/watch, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/123/watch" {
+			t.Errorf("expected /test-account/cards/123/watch, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)

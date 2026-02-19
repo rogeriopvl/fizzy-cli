@@ -3,10 +3,10 @@ package ui
 import (
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayReactions(reactions []api.Reaction) error {
+func DisplayReactions(reactions []fizzy.Reaction) error {
 	for _, reaction := range reactions {
 		fmt.Printf("%s %s (%s)\n", reaction.Content, reaction.Reacter.Name, DisplayID(reaction.ID))
 	}

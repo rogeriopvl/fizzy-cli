@@ -13,7 +13,7 @@ import (
 
 func TestNotificationReadAllCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/notifications/bulk_reading" && r.Method == http.MethodPost {
+		if r.URL.Path == "/test-account/notifications/bulk_reading" && r.Method == http.MethodPost {
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}

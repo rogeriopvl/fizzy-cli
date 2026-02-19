@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayBoard(w io.Writer, board *api.Board) error {
+func DisplayBoard(w io.Writer, board *fizzy.Board) error {
 	fmt.Fprintf(w, "Board: %s\n", board.Name)
 	fmt.Fprintf(w, "ID: %s\n", board.ID)
 	fmt.Fprintf(w, "All Access: %v\n", board.AllAccess)

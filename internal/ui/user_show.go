@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayUser(w io.Writer, user *api.User) error {
+func DisplayUser(w io.Writer, user *fizzy.User) error {
 	status := "active"
 	if !user.Active {
 		status = "inactive"

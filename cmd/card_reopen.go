@@ -32,7 +32,7 @@ func handleReopenCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.DeleteCardsClosure(context.Background(), cardNum)
+	err = a.Client.ReopenCard(context.Background(), cardNum)
 	if err != nil {
 		return fmt.Errorf("reopening card: %w", err)
 	}

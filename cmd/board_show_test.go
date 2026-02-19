@@ -7,15 +7,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestBoardShowCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/boards/board-123" {
-			t.Errorf("expected /boards/board-123, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/boards/board-123" {
+			t.Errorf("expected /test-account/boards/board-123, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -27,12 +27,12 @@ func TestBoardShowCommandSuccess(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.Board{
+		response := fizzy.Board{
 			ID:        "board-123",
 			Name:      "Project Alpha",
 			AllAccess: true,
 			CreatedAt: "2025-01-01T00:00:00Z",
-			Creator: api.User{
+			Creator: fizzy.User{
 				ID:   "user-123",
 				Name: "John Doe",
 				Role: "owner",

@@ -8,15 +8,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestUserListCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/users" {
-			t.Errorf("expected /users, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/users" {
+			t.Errorf("expected /test-account/users, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -31,7 +31,7 @@ func TestUserListCommand(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := []api.User{
+		response := []fizzy.User{
 			{
 				ID:        "user-123",
 				Name:      "John Doe",
@@ -68,7 +68,7 @@ func TestUserListCommand(t *testing.T) {
 func TestUserListCommandNoUsers(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.User{})
+		json.NewEncoder(w).Encode([]fizzy.User{})
 	}))
 	defer server.Close()
 

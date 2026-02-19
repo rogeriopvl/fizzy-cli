@@ -3,10 +3,10 @@ package ui
 import (
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayBoards(boards []api.Board) error {
+func DisplayBoards(boards []fizzy.Board) error {
 	for _, board := range boards {
 		fmt.Printf("%s (%s)\n", board.Name, DisplayID(board.ID))
 	}

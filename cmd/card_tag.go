@@ -37,7 +37,7 @@ func handleTagCard(cmd *cobra.Command, cardNumber, tagTitle string) error {
 
 	tagTitle = strings.TrimPrefix(tagTitle, "#")
 
-	_, err = a.Client.PostCardTagging(context.Background(), cardNum, tagTitle)
+	err = a.Client.TagCard(context.Background(), cardNum, tagTitle)
 	if err != nil {
 		return fmt.Errorf("toggling tag on card: %w", err)
 	}

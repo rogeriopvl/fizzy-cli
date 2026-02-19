@@ -27,7 +27,7 @@ func handleUnreadNotification(cmd *cobra.Command, notificationID string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err := a.Client.DeleteNotificationReading(context.Background(), notificationID)
+	err := a.Client.MarkNotificationUnread(context.Background(), notificationID)
 	if err != nil {
 		if strings.Contains(err.Error(), "404") {
 			return fmt.Errorf("notification not found")

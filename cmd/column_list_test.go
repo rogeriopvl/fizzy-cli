@@ -7,15 +7,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestColumnListCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/boards/board-123/columns" {
-			t.Errorf("expected /boards/board-123/columns, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/boards/board-123/columns" {
+			t.Errorf("expected /test-account/boards/board-123/columns, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -31,11 +31,11 @@ func TestColumnListCommand(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := []api.Column{
+		response := []fizzy.Column{
 			{
 				ID:   "col-123",
 				Name: "Todo",
-				Color: api.ColorObject{
+				Color: fizzy.ColorObject{
 					Name:  "Blue",
 					Value: "var(--color-card-default)",
 				},
@@ -44,7 +44,7 @@ func TestColumnListCommand(t *testing.T) {
 			{
 				ID:   "col-456",
 				Name: "In Progress",
-				Color: api.ColorObject{
+				Color: fizzy.ColorObject{
 					Name:  "Lime",
 					Value: "var(--color-card-4)",
 				},
@@ -69,7 +69,7 @@ func TestColumnListCommand(t *testing.T) {
 func TestColumnListCommandNoColumns(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Column{})
+		json.NewEncoder(w).Encode([]fizzy.Column{})
 	}))
 	defer server.Close()
 
@@ -117,8 +117,8 @@ func TestColumnListCommandNoBoard(t *testing.T) {
 	if err == nil {
 		t.Errorf("expected error when board not selected")
 	}
-	if err.Error() != "fetching columns: please select a board first with 'fizzy use --board <board_name>'" {
-		t.Errorf("expected 'board not selected' error, got %v", err)
+	if err.Error() != "fetching columns: no board selected: use SetBoard or WithBoard when creating the client" {
+		t.Errorf("expected board error, got %v", err)
 	}
 }
 

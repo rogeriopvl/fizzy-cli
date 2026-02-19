@@ -32,7 +32,7 @@ func handleTriageCard(cmd *cobra.Command, cardNumber string, columnID string) er
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.PostCardTriage(context.Background(), cardNum, columnID)
+	err = a.Client.TriageCard(context.Background(), cardNum, columnID)
 	if err != nil {
 		return fmt.Errorf("triaging card: %w", err)
 	}

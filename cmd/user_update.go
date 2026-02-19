@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +37,7 @@ func handleUpdateUser(cmd *cobra.Command, userID string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	payload := api.UpdateUserPayload{}
+	payload := fizzy.UpdateUserPayload{}
 
 	if cmd.Flags().Changed("name") {
 		name, err := cmd.Flags().GetString("name")
@@ -54,7 +54,7 @@ func handleUpdateUser(cmd *cobra.Command, userID string) error {
 		payload.Avatar = avatar
 	}
 
-	err := a.Client.PutUser(context.Background(), userID, payload)
+	err := a.Client.UpdateUser(context.Background(), userID, payload)
 	if err != nil {
 		return fmt.Errorf("updating user: %w", err)
 	}

@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
@@ -30,8 +30,8 @@ func TestAccountListCommand(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.GetMyIdentityResponse{
-			Accounts: []api.Account{
+		response := fizzy.GetMyIdentityResponse{
+			Accounts: []fizzy.Account{
 				{
 					ID:        "account-123",
 					Name:      "Personal",
@@ -64,7 +64,7 @@ func TestAccountListCommand(t *testing.T) {
 func TestAccountListCommandNoAccounts(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		response := api.GetMyIdentityResponse{Accounts: []api.Account{}}
+		response := fizzy.GetMyIdentityResponse{Accounts: []fizzy.Account{}}
 		json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()

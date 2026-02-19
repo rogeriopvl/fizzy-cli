@@ -4,14 +4,16 @@ package app
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
+	"time"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
 	"github.com/rogeriopvl/fizzy/internal/config"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
 type App struct {
-	Client *api.Client
+	Client *fizzy.Client
 	Config *config.Config
 }
 
@@ -26,7 +28,15 @@ func New(version string) (*App, error) {
 		return &App{Config: cfg}, nil // No token set, app will handle gracefully
 	}
 
-	client, err := api.NewClient(cfg.SelectedAccount, cfg.SelectedBoard, version)
+	opts := []fizzy.ClientOption{
+		fizzy.WithHTTPClient(&http.Client{Timeout: 30 * time.Second}),
+	}
+
+	if cfg.SelectedBoard != "" {
+		opts = append(opts, fizzy.WithBoard(cfg.SelectedBoard))
+	}
+
+	client, err := fizzy.NewClient(cfg.SelectedAccount, token, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("creating API client: %w", err)
 	}

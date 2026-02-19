@@ -32,7 +32,7 @@ func handleCloseCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.PostCardsClosure(context.Background(), cardNum)
+	err = a.Client.CloseCard(context.Background(), cardNum)
 	if err != nil {
 		return fmt.Errorf("closing card: %w", err)
 	}

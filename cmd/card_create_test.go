@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/config"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
@@ -16,8 +16,8 @@ import (
 
 func TestCardCreateCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/boards/board-123/cards" {
-			t.Errorf("expected /boards/board-123/cards, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/boards/board-123/cards" {
+			t.Errorf("expected /test-account/boards/board-123/cards, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -33,7 +33,7 @@ func TestCardCreateCommandSuccess(t *testing.T) {
 		}
 
 		body, _ := io.ReadAll(r.Body)
-		var payload map[string]api.CreateCardPayload
+		var payload map[string]fizzy.CreateCardPayload
 		if err := json.Unmarshal(body, &payload); err != nil {
 			t.Fatalf("failed to unmarshal request body: %v", err)
 		}
@@ -75,7 +75,7 @@ func TestCardCreateCommandWithAllFields(t *testing.T) {
 		}
 
 		body, _ := io.ReadAll(r.Body)
-		var payload map[string]api.CreateCardPayload
+		var payload map[string]fizzy.CreateCardPayload
 		json.Unmarshal(body, &payload)
 
 		cardPayload := payload["card"]

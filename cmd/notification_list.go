@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
@@ -27,7 +27,7 @@ func handleListNotifications(cmd *cobra.Command) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	opts := &api.ListOptions{}
+	opts := &fizzy.ListOptions{}
 	if limit, _ := cmd.Flags().GetInt("limit"); limit > 0 {
 		opts.Limit = limit
 	}
@@ -50,12 +50,12 @@ func handleListNotifications(cmd *cobra.Command) error {
 	return ui.DisplayNotifications(filtered)
 }
 
-func filterNotifications(notifications []api.Notification, read bool, unread bool) []api.Notification {
+func filterNotifications(notifications []fizzy.Notification, read bool, unread bool) []fizzy.Notification {
 	if !read && !unread {
 		return notifications
 	}
 
-	var filtered []api.Notification
+	var filtered []fizzy.Notification
 	for _, notification := range notifications {
 		if read && notification.Read {
 			filtered = append(filtered, notification)

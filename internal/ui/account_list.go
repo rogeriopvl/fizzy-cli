@@ -3,10 +3,10 @@ package ui
 import (
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayAccounts(accounts []api.Account) error {
+func DisplayAccounts(accounts []fizzy.Account) error {
 	for _, account := range accounts {
 		fmt.Printf("%s (%s)\n", account.Name, DisplayMeta("slug", account.Slug))
 	}

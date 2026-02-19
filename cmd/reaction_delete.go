@@ -32,7 +32,7 @@ func handleDeleteReaction(cmd *cobra.Command, cardNumber, commentID, reactionID 
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.DeleteCommentReaction(context.Background(), cardNum, commentID, reactionID)
+	err = a.Client.DeleteCommentReaction(context.Background(), cardNum, commentID, reactionID)
 	if err != nil {
 		return fmt.Errorf("deleting reaction: %w", err)
 	}

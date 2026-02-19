@@ -7,15 +7,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestCardShowCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/1" {
-			t.Errorf("expected /cards/1, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/1" {
+			t.Errorf("expected /test-account/cards/1, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -27,7 +27,7 @@ func TestCardShowCommand(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.Card{
+		response := fizzy.Card{
 			ID:           "card-123",
 			Number:       1,
 			Title:        "Implement feature",
@@ -35,10 +35,10 @@ func TestCardShowCommand(t *testing.T) {
 			Description:  "This is a test card",
 			Tags:         []string{"feature", "backend"},
 			Golden:       false,
-			Closed:       false,
-			Column:       &api.Column{ID: "col-1", Name: "In Progress"},
-			Steps:        []api.Step{{ID: "step-1", Content: "First step", Completed: true}},
-			CreatedAt:    "2025-01-01T00:00:00Z",
+		Closed:       false,
+		Column:       &fizzy.Column{ID: "col-1", Name: "In Progress"},
+		Steps:        []fizzy.Step{{ID: "step-1", Content: "First step", Completed: true}},
+		CreatedAt:    "2025-01-01T00:00:00Z",
 			LastActiveAt: "2025-01-15T10:30:00Z",
 			URL:          "https://example.com/card/1",
 		}

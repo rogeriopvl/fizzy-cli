@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/colors"
 )
 
-func DisplayColumns(columns []api.Column) error {
+func DisplayColumns(columns []fizzy.Column) error {
 	for _, column := range columns {
 		colorName := column.Color.Name
 		colorDef := colors.ByName(colorName)

@@ -8,15 +8,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestStepCreateCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/123/steps" {
-			t.Errorf("expected /cards/123/steps, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/123/steps" {
+			t.Errorf("expected /test-account/cards/123/steps, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -47,7 +47,7 @@ func TestStepCreateCommandSuccess(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		response := api.Step{
+		response := fizzy.Step{
 			ID:        "step-789",
 			Content:   "Write tests",
 			Completed: false,
@@ -85,7 +85,7 @@ func TestStepCreateCommandWithCompleted(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		response := api.Step{
+		response := fizzy.Step{
 			ID:        "step-789",
 			Content:   "Already done",
 			Completed: true,

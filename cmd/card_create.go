@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -39,7 +39,7 @@ func handleCreateCard(cmd *cobra.Command) error {
 	createdAt, _ := cmd.Flags().GetString("created-at")
 	lastActiveAt, _ := cmd.Flags().GetString("last-active-at")
 
-	payload := api.CreateCardPayload{
+	payload := fizzy.CreateCardPayload{
 		Title:        title,
 		Description:  description,
 		Status:       status,
@@ -49,7 +49,7 @@ func handleCreateCard(cmd *cobra.Command) error {
 		LastActiveAt: lastActiveAt,
 	}
 
-	_, err := a.Client.PostCards(context.Background(), &payload)
+	err := a.Client.CreateCard(context.Background(), payload)
 	if err != nil {
 		return fmt.Errorf("creating card: %w", err)
 	}

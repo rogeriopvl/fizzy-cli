@@ -8,15 +8,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestBoardCreateCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/boards" {
-			t.Errorf("expected /boards, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/boards" {
+			t.Errorf("expected /test-account/boards, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -32,7 +32,7 @@ func TestBoardCreateCommandSuccess(t *testing.T) {
 		}
 
 		body, _ := io.ReadAll(r.Body)
-		var payload map[string]api.CreateBoardPayload
+		var payload map[string]fizzy.CreateBoardPayload
 		if err := json.Unmarshal(body, &payload); err != nil {
 			t.Fatalf("failed to unmarshal request body: %v", err)
 		}
@@ -66,7 +66,7 @@ func TestBoardCreateCommandWithAllFlags(t *testing.T) {
 		}
 
 		body, _ := io.ReadAll(r.Body)
-		var payload map[string]api.CreateBoardPayload
+		var payload map[string]fizzy.CreateBoardPayload
 		json.Unmarshal(body, &payload)
 
 		boardPayload := payload["board"]

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
@@ -57,7 +57,7 @@ func handleLogin(cmd *cobra.Command) error {
 	return nil
 }
 
-func chooseAccount(cmd *cobra.Command, accounts []api.Account) (api.Account, error) {
+func chooseAccount(cmd *cobra.Command, accounts []fizzy.Account) (fizzy.Account, error) {
 	if len(accounts) == 1 {
 		selected := accounts[0]
 		return selected, nil

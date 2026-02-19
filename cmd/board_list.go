@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
@@ -27,7 +27,7 @@ func handleListBoards(cmd *cobra.Command) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	opts := &api.ListOptions{}
+	opts := &fizzy.ListOptions{}
 	if limit, _ := cmd.Flags().GetInt("limit"); limit > 0 {
 		opts.Limit = limit
 	}

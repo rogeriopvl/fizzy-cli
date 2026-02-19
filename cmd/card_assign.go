@@ -41,7 +41,7 @@ func handleAssignCard(cmd *cobra.Command, cardNumber, userID string) error {
 		userID = a.Config.CurrentUserID
 	}
 
-	_, err = a.Client.PostCardAssignments(context.Background(), cardNum, userID)
+	err = a.Client.AssignCard(context.Background(), cardNum, userID)
 	if err != nil {
 		return fmt.Errorf("assigning card: %w", err)
 	}

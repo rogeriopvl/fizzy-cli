@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/config"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
@@ -32,8 +32,8 @@ func newCardListCmd() *cobra.Command {
 
 func TestCardListCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards" {
-			t.Errorf("expected /cards, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards" {
+			t.Errorf("expected /test-account/cards, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -50,7 +50,7 @@ func TestCardListCommand(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := []api.Card{
+		response := []fizzy.Card{
 			{
 				ID:        "card-123",
 				Number:    1,
@@ -87,7 +87,7 @@ func TestCardListCommand(t *testing.T) {
 func TestCardListCommandNoCards(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Card{})
+		json.NewEncoder(w).Encode([]fizzy.Card{})
 	}))
 	defer server.Close()
 
@@ -172,7 +172,7 @@ func TestCardListCommandWithTagFilter(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Card{})
+		json.NewEncoder(w).Encode([]fizzy.Card{})
 	}))
 	defer server.Close()
 
@@ -199,7 +199,7 @@ func TestCardListCommandWithAssigneeFilter(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Card{})
+		json.NewEncoder(w).Encode([]fizzy.Card{})
 	}))
 	defer server.Close()
 
@@ -226,7 +226,7 @@ func TestCardListCommandWithIndexedByFilter(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Card{})
+		json.NewEncoder(w).Encode([]fizzy.Card{})
 	}))
 	defer server.Close()
 
@@ -253,7 +253,7 @@ func TestCardListCommandWithSortedByFilter(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Card{})
+		json.NewEncoder(w).Encode([]fizzy.Card{})
 	}))
 	defer server.Close()
 
@@ -280,7 +280,7 @@ func TestCardListCommandWithUnassignedFilter(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Card{})
+		json.NewEncoder(w).Encode([]fizzy.Card{})
 	}))
 	defer server.Close()
 
@@ -307,7 +307,7 @@ func TestCardListCommandWithSearchFilter(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Card{})
+		json.NewEncoder(w).Encode([]fizzy.Card{})
 	}))
 	defer server.Close()
 
@@ -349,7 +349,7 @@ func TestCardListCommandWithMultipleFilters(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Card{})
+		json.NewEncoder(w).Encode([]fizzy.Card{})
 	}))
 	defer server.Close()
 

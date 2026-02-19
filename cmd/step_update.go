@@ -49,7 +49,7 @@ func handleUpdateStep(cmd *cobra.Command, cardNumber, stepID string) error {
 		return fmt.Errorf("at least one of --content or --completed must be provided")
 	}
 
-	step, err := a.Client.PutCardStep(context.Background(), cardNum, stepID, contentPtr, completedPtr)
+	step, err := a.Client.UpdateCardStep(context.Background(), cardNum, stepID, contentPtr, completedPtr)
 	if err != nil {
 		return fmt.Errorf("updating step: %w", err)
 	}

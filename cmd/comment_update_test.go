@@ -8,15 +8,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestCommentUpdateCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/123/comments/comment-456" {
-			t.Errorf("expected /cards/123/comments/comment-456, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/123/comments/comment-456" {
+			t.Errorf("expected /test-account/cards/123/comments/comment-456, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodPut {
 			t.Errorf("expected PUT, got %s", r.Method)
@@ -43,11 +43,11 @@ func TestCommentUpdateCommandSuccess(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.Comment{
+		response := fizzy.Comment{
 			ID:        "comment-456",
 			CreatedAt: "2025-01-01T00:00:00Z",
 			UpdatedAt: "2025-01-02T00:00:00Z",
-			Creator:   api.User{ID: "user-1", Name: "John Doe"},
+			Creator:   fizzy.User{ID: "user-1", Name: "John Doe"},
 		}
 		response.Body.PlainText = "Updated comment text"
 		json.NewEncoder(w).Encode(response)

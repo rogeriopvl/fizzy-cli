@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -33,7 +33,7 @@ func handleUpdateColumn(cmd *cobra.Command, columnID string) error {
 	}
 
 	// Build payload only with flags that were explicitly set
-	payload := api.UpdateColumnPayload{}
+	payload := fizzy.UpdateColumnPayload{}
 
 	if cmd.Flags().Changed("name") {
 		name, _ := cmd.Flags().GetString("name")
@@ -50,7 +50,7 @@ func handleUpdateColumn(cmd *cobra.Command, columnID string) error {
 		payload.Color = &color
 	}
 
-	err := a.Client.PutColumn(context.Background(), columnID, payload)
+	err := a.Client.UpdateColumn(context.Background(), columnID, payload)
 	if err != nil {
 		return fmt.Errorf("updating column: %w", err)
 	}
