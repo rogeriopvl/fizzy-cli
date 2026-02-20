@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/config"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
@@ -15,12 +15,12 @@ import (
 
 func TestBoardCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/boards/board-123" {
-			t.Errorf("expected /boards/board-123, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/boards/board-123" {
+			t.Errorf("expected /test-account/boards/board-123, got %s", r.URL.Path)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.Board{
+		response := fizzy.Board{
 			ID:        "board-123",
 			Name:      "Test Board",
 			AllAccess: true,

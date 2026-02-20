@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/config"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
@@ -15,8 +15,8 @@ import (
 
 func TestNotificationListCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/notifications" {
-			t.Errorf("expected /notifications, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/notifications" {
+			t.Errorf("expected /test-account/notifications, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -28,7 +28,7 @@ func TestNotificationListCommand(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := []api.Notification{
+		response := []fizzy.Notification{
 			{
 				ID:        "notif-123",
 				Read:      false,
@@ -36,7 +36,7 @@ func TestNotificationListCommand(t *testing.T) {
 				CreatedAt: "2025-01-01T00:00:00Z",
 				Title:     "Plain text mentions",
 				Body:      "Assigned to self",
-				Creator: api.User{
+				Creator: fizzy.User{
 					ID:        "user-123",
 					Name:      "David Heinemeier Hansson",
 					Email:     "david@example.com",
@@ -45,7 +45,7 @@ func TestNotificationListCommand(t *testing.T) {
 					CreatedAt: "2025-12-05T19:36:35.401Z",
 					URL:       "http://fizzy.localhost:3006/897362094/users/03f5v9zjw7pz8717a4no1h8a7",
 				},
-				Card: api.CardReference{
+				Card: fizzy.CardReference{
 					ID:     "card-123",
 					Title:  "Plain text mentions",
 					Status: "published",
@@ -60,7 +60,7 @@ func TestNotificationListCommand(t *testing.T) {
 				CreatedAt: "2025-01-01T12:00:00Z",
 				Title:     "Comment reply",
 				Body:      "Someone replied to your comment",
-				Creator: api.User{
+				Creator: fizzy.User{
 					ID:        "user-456",
 					Name:      "Jason Fried",
 					Email:     "jason@example.com",
@@ -69,7 +69,7 @@ func TestNotificationListCommand(t *testing.T) {
 					CreatedAt: "2025-12-05T19:36:35.419Z",
 					URL:       "http://fizzy.localhost:3006/897362094/users/03f5v9zjysoy0fqs9yg0ei3hq",
 				},
-				Card: api.CardReference{
+				Card: fizzy.CardReference{
 					ID:     "card-456",
 					Title:  "Fix bug",
 					Status: "in_progress",
@@ -99,7 +99,7 @@ func TestNotificationListCommand(t *testing.T) {
 func TestNotificationListCommandNoNotifications(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode([]api.Notification{})
+		json.NewEncoder(w).Encode([]fizzy.Notification{})
 	}))
 	defer server.Close()
 
@@ -160,14 +160,14 @@ func TestNotificationListCommandNoClient(t *testing.T) {
 func TestNotificationListCommandWithReadFilter(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		response := []api.Notification{
+		response := []fizzy.Notification{
 			{
 				ID:        "notif-123",
 				Read:      false,
 				CreatedAt: "2025-01-01T00:00:00Z",
 				Title:     "Unread notification",
 				Body:      "This should be filtered out",
-				Creator: api.User{
+				Creator: fizzy.User{
 					ID:        "user-123",
 					Name:      "David Heinemeier Hansson",
 					Email:     "david@example.com",
@@ -175,7 +175,7 @@ func TestNotificationListCommandWithReadFilter(t *testing.T) {
 					Active:    true,
 					CreatedAt: "2025-12-05T19:36:35.401Z",
 				},
-				Card: api.CardReference{
+				Card: fizzy.CardReference{
 					ID:     "card-123",
 					Title:  "Test card",
 					Status: "published",
@@ -188,7 +188,7 @@ func TestNotificationListCommandWithReadFilter(t *testing.T) {
 				CreatedAt: "2025-01-01T12:00:00Z",
 				Title:     "Read notification",
 				Body:      "This should be shown",
-				Creator: api.User{
+				Creator: fizzy.User{
 					ID:        "user-456",
 					Name:      "Jason Fried",
 					Email:     "jason@example.com",
@@ -196,7 +196,7 @@ func TestNotificationListCommandWithReadFilter(t *testing.T) {
 					Active:    true,
 					CreatedAt: "2025-12-05T19:36:35.419Z",
 				},
-				Card: api.CardReference{
+				Card: fizzy.CardReference{
 					ID:     "card-456",
 					Title:  "Another card",
 					Status: "in_progress",
@@ -225,14 +225,14 @@ func TestNotificationListCommandWithReadFilter(t *testing.T) {
 func TestNotificationListCommandWithUnreadFilter(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		response := []api.Notification{
+		response := []fizzy.Notification{
 			{
 				ID:        "notif-123",
 				Read:      false,
 				CreatedAt: "2025-01-01T00:00:00Z",
 				Title:     "Unread notification",
 				Body:      "This should be shown",
-				Creator: api.User{
+				Creator: fizzy.User{
 					ID:        "user-123",
 					Name:      "David Heinemeier Hansson",
 					Email:     "david@example.com",
@@ -240,7 +240,7 @@ func TestNotificationListCommandWithUnreadFilter(t *testing.T) {
 					Active:    true,
 					CreatedAt: "2025-12-05T19:36:35.401Z",
 				},
-				Card: api.CardReference{
+				Card: fizzy.CardReference{
 					ID:     "card-123",
 					Title:  "Test card",
 					Status: "published",
@@ -253,7 +253,7 @@ func TestNotificationListCommandWithUnreadFilter(t *testing.T) {
 				CreatedAt: "2025-01-01T12:00:00Z",
 				Title:     "Read notification",
 				Body:      "This should be filtered out",
-				Creator: api.User{
+				Creator: fizzy.User{
 					ID:        "user-456",
 					Name:      "Jason Fried",
 					Email:     "jason@example.com",
@@ -261,7 +261,7 @@ func TestNotificationListCommandWithUnreadFilter(t *testing.T) {
 					Active:    true,
 					CreatedAt: "2025-12-05T19:36:35.419Z",
 				},
-				Card: api.CardReference{
+				Card: fizzy.CardReference{
 					ID:     "card-456",
 					Title:  "Another card",
 					Status: "in_progress",

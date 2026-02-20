@@ -5,23 +5,28 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func NewTestClient(baseURL, accountSlug, boardID, accessToken string) *api.Client {
-	accountBaseURL := baseURL + accountSlug
+func NewTestClient(baseURL, accountSlug, boardID, accessToken string) *fizzy.Client {
+	// fizzy-go requires accountSlug, use a dummy if empty
+	if accountSlug == "" {
+		accountSlug = "/test-account"
+	}
+	// fizzy-go requires accessToken, use a dummy if empty
+	if accessToken == "" {
+		accessToken = "test-token"
+	}
 
-	var boardURL string
+	opts := []fizzy.ClientOption{
+		fizzy.WithHTTPClient(&http.Client{Timeout: 30 * time.Second}),
+		fizzy.WithBaseURL(baseURL),
+	}
+
 	if boardID != "" {
-		boardURL = accountBaseURL + "/boards" + "/" + boardID
+		opts = append(opts, fizzy.WithBoard(boardID))
 	}
 
-	return &api.Client{
-		BaseURL:        baseURL,
-		AccountBaseURL: accountBaseURL,
-		BoardBaseURL:   boardURL,
-		AccessToken:    accessToken,
-		UserAgent:      "fizzy-cli/test",
-		HTTPClient:     &http.Client{Timeout: 30 * time.Second},
-	}
+	client, _ := fizzy.NewClient(accountSlug, accessToken, opts...)
+	return client
 }

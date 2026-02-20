@@ -8,15 +8,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestReactionCreateCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/123/comments/comment-456/reactions" {
-			t.Errorf("expected /cards/123/comments/comment-456/reactions, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/123/comments/comment-456/reactions" {
+			t.Errorf("expected /test-account/cards/123/comments/comment-456/reactions, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -40,10 +40,10 @@ func TestReactionCreateCommandSuccess(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		response := api.Reaction{
+		response := fizzy.Reaction{
 			ID:      "reaction-789",
 			Content: "👍",
-			Reacter: api.User{ID: "user-1", Name: "John Doe"},
+			Reacter: fizzy.User{ID: "user-1", Name: "John Doe"},
 		}
 		json.NewEncoder(w).Encode(response)
 	}))

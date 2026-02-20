@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/config"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
@@ -18,21 +18,21 @@ func TestNotificationReadCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestCount++
 
-		if r.URL.Path == "/notifications/notif-123/reading" && r.Method == http.MethodPost {
+		if r.URL.Path == "/test-account/notifications/notif-123/reading" && r.Method == http.MethodPost {
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}
 
-		if r.URL.Path == "/notifications/notif-123" && r.Method == http.MethodGet {
+		if r.URL.Path == "/test-account/notifications/notif-123" && r.Method == http.MethodGet {
 			w.Header().Set("Content-Type", "application/json")
-			response := api.Notification{
+			response := fizzy.Notification{
 				ID:        "notif-123",
 				Read:      true,
 				ReadAt:    "2025-01-01T00:00:00Z",
 				CreatedAt: "2025-01-01T00:00:00Z",
 				Title:     "Test Notification",
 				Body:      "This is a test notification",
-				Creator: api.User{
+				Creator: fizzy.User{
 					ID:        "user-123",
 					Name:      "David Heinemeier Hansson",
 					Email:     "david@example.com",
@@ -40,7 +40,7 @@ func TestNotificationReadCommand(t *testing.T) {
 					Active:    true,
 					CreatedAt: "2025-12-05T19:36:35.401Z",
 				},
-				Card: api.CardReference{
+				Card: fizzy.CardReference{
 					ID:     "card-123",
 					Title:  "Test Card",
 					Status: "published",

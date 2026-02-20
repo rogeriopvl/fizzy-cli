@@ -32,7 +32,7 @@ func handleNotNowCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.PostCardNotNow(context.Background(), cardNum)
+	err = a.Client.PostponeCard(context.Background(), cardNum)
 	if err != nil {
 		return fmt.Errorf("moving card to not now: %w", err)
 	}

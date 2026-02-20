@@ -12,8 +12,8 @@ import (
 
 func TestCardCloseCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/123/closure" {
-			t.Errorf("expected /cards/123/closure, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/123/closure" {
+			t.Errorf("expected /test-account/cards/123/closure, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)

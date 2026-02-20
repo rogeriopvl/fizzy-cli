@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayUsers(w io.Writer, users []api.User) error {
+func DisplayUsers(w io.Writer, users []fizzy.User) error {
 	for _, user := range users {
 		status := "active"
 		if !user.Active {

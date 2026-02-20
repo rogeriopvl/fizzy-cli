@@ -32,7 +32,7 @@ func handleUntriagedCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.DeleteCardTriage(context.Background(), cardNum)
+	err = a.Client.UnTriageCard(context.Background(), cardNum)
 	if err != nil {
 		return fmt.Errorf("sending card back to triage: %w", err)
 	}

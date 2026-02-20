@@ -26,7 +26,7 @@ func handleDeactivateUser(cmd *cobra.Command, userID string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	err := a.Client.DeleteUser(context.Background(), userID)
+	err := a.Client.DeactivateUser(context.Background(), userID)
 	if err != nil {
 		return fmt.Errorf("deactivating user: %w", err)
 	}

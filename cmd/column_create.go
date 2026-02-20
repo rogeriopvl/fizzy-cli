@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/colors"
 	"github.com/spf13/cobra"
 )
 
-func buildColorAliases() map[string]api.Color {
-	aliases := make(map[string]api.Color)
+func buildColorAliases() map[string]fizzy.Color {
+	aliases := make(map[string]fizzy.Color)
 	for _, colorDef := range colors.All {
-		aliases[strings.ToLower(colorDef.Name)] = api.Color(colorDef.CSSValue)
+		aliases[strings.ToLower(colorDef.Name)] = fizzy.Color(colorDef.CSSValue)
 	}
 	return aliases
 }
@@ -48,7 +48,7 @@ func handleCreateColumn(cmd *cobra.Command) error {
 	name, _ := cmd.Flags().GetString("name")
 	colorStr, _ := cmd.Flags().GetString("color")
 
-	payload := api.CreateColumnPayload{
+	payload := fizzy.CreateColumnPayload{
 		Name: name,
 	}
 
@@ -61,7 +61,7 @@ func handleCreateColumn(cmd *cobra.Command) error {
 		payload.Color = &color
 	}
 
-	_, err := a.Client.PostColumns(context.Background(), payload)
+	err := a.Client.CreateColumn(context.Background(), payload)
 	if err != nil {
 		return fmt.Errorf("creating column: %w", err)
 	}

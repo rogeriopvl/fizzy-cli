@@ -34,7 +34,7 @@ func handleCreateComment(cmd *cobra.Command, cardNumber string) error {
 
 	body, _ := cmd.Flags().GetString("body")
 
-	_, err = a.Client.PostCardComment(context.Background(), cardNum, body)
+	_, err = a.Client.CreateCardComment(context.Background(), cardNum, body)
 	if err != nil {
 		return fmt.Errorf("creating comment: %w", err)
 	}

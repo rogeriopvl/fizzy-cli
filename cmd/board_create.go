@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -32,14 +32,14 @@ func handleCreateBoard(cmd *cobra.Command) error {
 	autoPostponePeriod, _ := cmd.Flags().GetInt("auto-postpone-period")
 	publicDescription, _ := cmd.Flags().GetString("description")
 
-	payload := api.CreateBoardPayload{
+	payload := fizzy.CreateBoardPayload{
 		Name:               name,
 		AllAccess:          allAccess,
 		AutoPostponePeriod: autoPostponePeriod,
 		PublicDescription:  publicDescription,
 	}
 
-	_, err := a.Client.PostBoards(context.Background(), payload)
+	err := a.Client.CreateBoard(context.Background(), payload)
 	if err != nil {
 		return fmt.Errorf("creating board: %w", err)
 	}

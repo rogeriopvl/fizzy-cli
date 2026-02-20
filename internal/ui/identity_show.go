@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayIdentity(w io.Writer, identity *api.GetMyIdentityResponse) error {
+func DisplayIdentity(w io.Writer, identity *fizzy.GetMyIdentityResponse) error {
 	if len(identity.Accounts) == 0 {
 		fmt.Fprintf(w, "No accounts found\n")
 		return nil

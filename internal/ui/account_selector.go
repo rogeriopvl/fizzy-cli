@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
 type accountModel struct {
-	accounts []api.Account
+	accounts []fizzy.Account
 	cursor   int
 }
 
@@ -51,11 +51,11 @@ func (m accountModel) View() string {
 	return s
 }
 
-func SelectAccount(accounts []api.Account) (api.Account, error) {
+func SelectAccount(accounts []fizzy.Account) (fizzy.Account, error) {
 	m := accountModel{accounts: accounts, cursor: 0}
 	p, err := tea.NewProgram(m).Run()
 	if err != nil {
-		return api.Account{}, err
+		return fizzy.Account{}, err
 	}
 
 	finalModel := p.(accountModel)

@@ -3,17 +3,17 @@ package ui
 import (
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayNotifications(notifications []api.Notification) error {
+func DisplayNotifications(notifications []fizzy.Notification) error {
 	for _, notification := range notifications {
 		fmt.Printf("%s (%s)\n", notification.Title, DisplayID(notification.ID))
 	}
 	return nil
 }
 
-func DisplayNotification(notification *api.Notification) error {
+func DisplayNotification(notification *fizzy.Notification) error {
 	status := "read"
 	if !notification.Read {
 		status = "unread"

@@ -34,7 +34,7 @@ func handleUpdateComment(cmd *cobra.Command, cardNumber, commentID string) error
 
 	body, _ := cmd.Flags().GetString("body")
 
-	comment, err := a.Client.PutCardComment(context.Background(), cardNum, commentID, body)
+	comment, err := a.Client.UpdateCardComment(context.Background(), cardNum, commentID, body)
 	if err != nil {
 		return fmt.Errorf("updating comment: %w", err)
 	}

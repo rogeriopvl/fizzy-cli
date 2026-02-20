@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/ui"
 	"github.com/spf13/cobra"
@@ -45,7 +45,7 @@ func handleListCards(cmd *cobra.Command) error {
 		return fmt.Errorf("no board selected")
 	}
 
-	filters := api.CardFilters{
+	filters := fizzy.CardFilters{
 		BoardIDs: []string{a.Config.SelectedBoard},
 	}
 

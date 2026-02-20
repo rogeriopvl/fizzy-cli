@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/config"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
@@ -33,8 +33,8 @@ func newUseCmd() *cobra.Command {
 
 func TestUseCommandSetBoard(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/boards" {
-			t.Errorf("expected /boards, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/boards" {
+			t.Errorf("expected /test-account/boards, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -49,7 +49,7 @@ func TestUseCommandSetBoard(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := []api.Board{
+		response := []fizzy.Board{
 			{
 				ID:   "board-123",
 				Name: "My Project",
@@ -128,7 +128,7 @@ func TestUseCommandBoardNotFound(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := []api.Board{
+		response := []fizzy.Board{
 			{ID: "board-123", Name: "Existing Board"},
 		}
 		json.NewEncoder(w).Encode(response)

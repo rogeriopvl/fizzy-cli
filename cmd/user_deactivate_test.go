@@ -12,8 +12,8 @@ import (
 
 func TestUserDeactivateCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/users/user-123" {
-			t.Errorf("expected /users/user-123, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/users/user-123" {
+			t.Errorf("expected /test-account/users/user-123, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)

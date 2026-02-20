@@ -25,7 +25,7 @@ func handleReadAllNotifications(cmd *cobra.Command) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	if _, err := a.Client.PostBulkNotificationsReading(context.Background()); err != nil {
+	if err := a.Client.MarkAllNotificationsRead(context.Background()); err != nil {
 		return fmt.Errorf("marking all notifications as read: %w", err)
 	}
 

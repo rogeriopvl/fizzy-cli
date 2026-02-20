@@ -12,8 +12,8 @@ import (
 
 func TestCardReactionDeleteCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/123/reactions/reaction-456" {
-			t.Errorf("expected /cards/123/reactions/reaction-456, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/123/reactions/reaction-456" {
+			t.Errorf("expected /test-account/cards/123/reactions/reaction-456, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -93,8 +93,8 @@ func TestCardReactionDeleteCommandAPIError(t *testing.T) {
 
 func TestCardReactionDeleteCommandDifferentReactionID(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/456/reactions/reaction-789" {
-			t.Errorf("expected /cards/456/reactions/reaction-789, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/456/reactions/reaction-789" {
+			t.Errorf("expected /test-account/cards/456/reactions/reaction-789, got %s", r.URL.Path)
 		}
 		w.WriteHeader(http.StatusNoContent)
 	}))

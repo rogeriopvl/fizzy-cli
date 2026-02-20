@@ -28,7 +28,7 @@ func handleReadNotification(cmd *cobra.Command, notificationID string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	if _, err := a.Client.PostNotificationReading(context.Background(), notificationID); err != nil {
+	if err := a.Client.MarkNotificationRead(context.Background(), notificationID); err != nil {
 		if strings.Contains(err.Error(), "404") {
 			return fmt.Errorf("notification not found")
 		}

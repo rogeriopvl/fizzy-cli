@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/config"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
@@ -38,13 +38,13 @@ func TestLoginCommand(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.GetMyIdentityResponse{
-			Accounts: []api.Account{
+		response := fizzy.GetMyIdentityResponse{
+			Accounts: []fizzy.Account{
 				{
 					ID:   "acc-123",
 					Name: "Test Account",
 					Slug: "test-account",
-					User: api.User{
+					User: fizzy.User{
 						ID:    "user-123",
 						Email: "test@example.com",
 						Name:  "Test User",

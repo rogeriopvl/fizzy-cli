@@ -32,7 +32,7 @@ func handleUngoldenCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.DeleteCardGoldenness(context.Background(), cardNum)
+	err = a.Client.UnmarkCardGolden(context.Background(), cardNum)
 	if err != nil {
 		return fmt.Errorf("removing golden status: %w", err)
 	}

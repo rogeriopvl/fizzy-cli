@@ -32,7 +32,7 @@ func handleDeleteComment(cmd *cobra.Command, cardNumber, commentID string) error
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.DeleteCardComment(context.Background(), cardNum, commentID)
+	err = a.Client.DeleteCardComment(context.Background(), cardNum, commentID)
 	if err != nil {
 		return fmt.Errorf("deleting comment: %w", err)
 	}

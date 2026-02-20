@@ -8,15 +8,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 )
 
 func TestColumnCreateCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/boards/board-123/columns" {
-			t.Errorf("expected /boards/board-123/columns, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/boards/board-123/columns" {
+			t.Errorf("expected /test-account/boards/board-123/columns, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -32,7 +32,7 @@ func TestColumnCreateCommandSuccess(t *testing.T) {
 		}
 
 		body, _ := io.ReadAll(r.Body)
-		var payload map[string]api.CreateColumnPayload
+		var payload map[string]fizzy.CreateColumnPayload
 		if err := json.Unmarshal(body, &payload); err != nil {
 			t.Fatalf("failed to unmarshal request body: %v", err)
 		}
@@ -69,7 +69,7 @@ func TestColumnCreateCommandWithColor(t *testing.T) {
 		}
 
 		body, _ := io.ReadAll(r.Body)
-		var payload map[string]api.CreateColumnPayload
+		var payload map[string]fizzy.CreateColumnPayload
 		json.Unmarshal(body, &payload)
 
 		columnPayload := payload["column"]
@@ -133,8 +133,8 @@ func TestColumnCreateCommandNoBoard(t *testing.T) {
 	if err == nil {
 		t.Errorf("expected error when board not selected")
 	}
-	if err.Error() != "creating column: please select a board first with 'fizzy use --board <board_name>'" {
-		t.Errorf("expected 'board not selected' error, got %v", err)
+	if err.Error() != "creating column: no board selected: use SetBoard or WithBoard when creating the client" {
+		t.Errorf("expected board error, got %v", err)
 	}
 }
 

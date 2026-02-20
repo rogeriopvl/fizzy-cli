@@ -32,7 +32,7 @@ func handleUnwatchCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.DeleteCardWatch(context.Background(), cardNum)
+	err = a.Client.UnwatchCard(context.Background(), cardNum)
 	if err != nil {
 		return fmt.Errorf("unwatching card: %w", err)
 	}

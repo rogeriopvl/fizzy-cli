@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/rogeriopvl/fizzy/internal/testutil"
 	"github.com/spf13/cobra"
@@ -16,8 +16,8 @@ import (
 
 func TestStepUpdateCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/cards/123/steps/step-456" {
-			t.Errorf("expected /cards/123/steps/step-456, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/cards/123/steps/step-456" {
+			t.Errorf("expected /test-account/cards/123/steps/step-456, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodPut {
 			t.Errorf("expected PUT, got %s", r.Method)
@@ -44,7 +44,7 @@ func TestStepUpdateCommandSuccess(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.Step{
+		response := fizzy.Step{
 			ID:        "step-456",
 			Content:   "Updated step text",
 			Completed: false,
@@ -81,7 +81,7 @@ func TestStepUpdateCommandWithCompleted(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := api.Step{
+		response := fizzy.Step{
 			ID:        "step-456",
 			Content:   "Some step",
 			Completed: true,

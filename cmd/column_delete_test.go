@@ -12,8 +12,8 @@ import (
 
 func TestColumnDeleteCommandSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/boards/board-123/columns/col-456" {
-			t.Errorf("expected /boards/board-123/columns/col-456, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/boards/board-123/columns/col-456" {
+			t.Errorf("expected /test-account/boards/board-123/columns/col-456, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)

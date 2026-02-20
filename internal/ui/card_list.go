@@ -3,10 +3,10 @@ package ui
 import (
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 
-func DisplayCards(cards []api.Card) error {
+func DisplayCards(cards []fizzy.Card) error {
 	for _, card := range cards {
 		fmt.Printf("%d - %s\n", card.Number, card.Title)
 	}

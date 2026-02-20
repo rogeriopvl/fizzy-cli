@@ -12,8 +12,8 @@ import (
 
 func TestNotificationUnreadCommand(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/notifications/notif-123/reading" {
-			t.Errorf("expected /notifications/notif-123/reading, got %s", r.URL.Path)
+		if r.URL.Path != "/test-account/notifications/notif-123/reading" {
+			t.Errorf("expected /test-account/notifications/notif-123/reading, got %s", r.URL.Path)
 		}
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)

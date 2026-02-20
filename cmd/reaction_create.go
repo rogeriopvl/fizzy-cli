@@ -32,7 +32,7 @@ func handleCreateReaction(cmd *cobra.Command, cardNumber, commentID, emoji strin
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.PostCommentReaction(context.Background(), cardNum, commentID, emoji)
+	_, err = a.Client.CreateCommentReaction(context.Background(), cardNum, commentID, emoji)
 	if err != nil {
 		return fmt.Errorf("creating reaction: %w", err)
 	}

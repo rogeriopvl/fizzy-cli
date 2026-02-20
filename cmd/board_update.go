@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogeriopvl/fizzy/internal/api"
+	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -34,7 +34,7 @@ func handleUpdateBoard(cmd *cobra.Command, boardID string) error {
 	}
 
 	// Build payload only with flags that were explicitly set
-	payload := api.UpdateBoardPayload{}
+	payload := fizzy.UpdateBoardPayload{}
 
 	if cmd.Flags().Changed("name") {
 		name, _ := cmd.Flags().GetString("name")
@@ -53,7 +53,7 @@ func handleUpdateBoard(cmd *cobra.Command, boardID string) error {
 		payload.PublicDescription = publicDescription
 	}
 
-	err := a.Client.PutBoard(context.Background(), boardID, payload)
+	err := a.Client.UpdateBoard(context.Background(), boardID, payload)
 	if err != nil {
 		return fmt.Errorf("updating board: %w", err)
 	}

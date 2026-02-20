@@ -32,7 +32,7 @@ func handleWatchCard(cmd *cobra.Command, cardNumber string) error {
 		return fmt.Errorf("API client not available")
 	}
 
-	_, err = a.Client.PostCardWatch(context.Background(), cardNum)
+	err = a.Client.WatchCard(context.Background(), cardNum)
 	if err != nil {
 		return fmt.Errorf("watching card: %w", err)
 	}
