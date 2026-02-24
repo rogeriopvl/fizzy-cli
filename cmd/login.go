@@ -6,8 +6,8 @@ import (
 	"os"
 
 	fizzy "github.com/rogeriopvl/fizzy-go"
-	"github.com/rogeriopvl/fizzy/internal/app"
-	"github.com/rogeriopvl/fizzy/internal/ui"
+	"github.com/rogeriopvl/fizzy-cli/internal/app"
+	"github.com/rogeriopvl/fizzy-cli/internal/ui"
 	"github.com/spf13/cobra"
 )
 

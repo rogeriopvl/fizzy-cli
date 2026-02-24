@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/rogeriopvl/fizzy/internal/config"
+	"github.com/rogeriopvl/fizzy-cli/internal/config"
 	fizzy "github.com/rogeriopvl/fizzy-go"
 )
 

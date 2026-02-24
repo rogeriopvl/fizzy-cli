@@ -5,7 +5,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	fizzy "github.com/rogeriopvl/fizzy-go"
-	"github.com/rogeriopvl/fizzy/internal/colors"
+	"github.com/rogeriopvl/fizzy-cli/internal/colors"
 )
 
 func DisplayColumns(columns []fizzy.Column) error {

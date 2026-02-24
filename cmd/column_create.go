@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	fizzy "github.com/rogeriopvl/fizzy-go"
-	"github.com/rogeriopvl/fizzy/internal/app"
-	"github.com/rogeriopvl/fizzy/internal/colors"
+	"github.com/rogeriopvl/fizzy-cli/internal/app"
+	"github.com/rogeriopvl/fizzy-cli/internal/colors"
 	"github.com/spf13/cobra"
 )
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	fizzy "github.com/rogeriopvl/fizzy-go"
-	"github.com/rogeriopvl/fizzy/internal/app"
+	"github.com/rogeriopvl/fizzy-cli/internal/app"
 	"github.com/spf13/cobra"
 )
 

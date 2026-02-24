@@ -1,8 +1,8 @@
 .PHONY: help dev-tools run build build-all build-dev clean test install sync-api-spec
 
 VERSION := $(shell grep '"version"' package.json | sed 's/.*"version": "\([^"]*\)".*/\1/')
-LDFLAGS := -ldflags="-s -w -X 'github.com/rogeriopvl/fizzy/cmd.Version=$(VERSION)'"
-LDFLAGS_DEBUG := -ldflags="-X 'github.com/rogeriopvl/fizzy/cmd.Version=$(VERSION)'"
+LDFLAGS := -ldflags="-s -w -X 'github.com/rogeriopvl/fizzy-cli/cmd.Version=$(VERSION)'"
+LDFLAGS_DEBUG := -ldflags="-X 'github.com/rogeriopvl/fizzy-cli/cmd.Version=$(VERSION)'"
 
 help:
 	@echo 'Usage: make [target]'
