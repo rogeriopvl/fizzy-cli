@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.2 - 2026-02-24
+
+### Internal
+
+- Migrated API client to use the `fizzy-go` package, removing internal API implementation
+- Fixed npm package name configuration
+
 ## 1.0.1 - 2026-02-18
 
 ### Fixes
