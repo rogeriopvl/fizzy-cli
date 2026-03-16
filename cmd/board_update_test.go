@@ -72,8 +72,8 @@ func TestBoardUpdateCommandWithAllFlags(t *testing.T) {
 		if boardPayload.AllAccess == nil || !*boardPayload.AllAccess {
 			t.Error("expected AllAccess to be pointer to true")
 		}
-		if boardPayload.AutoPostponePeriod == nil || *boardPayload.AutoPostponePeriod != 14 {
-			t.Errorf("expected AutoPostponePeriod pointer to 14, got %v", boardPayload.AutoPostponePeriod)
+		if boardPayload.AutoPostponePeriodInDays == nil || *boardPayload.AutoPostponePeriodInDays != 14 {
+			t.Errorf("expected AutoPostponePeriodInDays pointer to 14, got %v", boardPayload.AutoPostponePeriodInDays)
 		}
 		if boardPayload.PublicDescription != "Updated description" {
 			t.Errorf("expected description 'Updated description', got %s", boardPayload.PublicDescription)
@@ -119,11 +119,11 @@ func TestBoardUpdateCommandZeroValues(t *testing.T) {
 			t.Error("expected AllAccess to be false")
 		}
 		// Verify that 0 value is sent (not omitted)
-		if boardPayload.AutoPostponePeriod == nil {
-			t.Error("expected AutoPostponePeriod to be set (pointer), but got nil")
+		if boardPayload.AutoPostponePeriodInDays == nil {
+			t.Error("expected AutoPostponePeriodInDays to be set (pointer), but got nil")
 		}
-		if *boardPayload.AutoPostponePeriod != 0 {
-			t.Errorf("expected AutoPostponePeriod to be 0, got %d", *boardPayload.AutoPostponePeriod)
+		if *boardPayload.AutoPostponePeriodInDays != 0 {
+			t.Errorf("expected AutoPostponePeriodInDays to be 0, got %d", *boardPayload.AutoPostponePeriodInDays)
 		}
 
 		w.WriteHeader(http.StatusNoContent)

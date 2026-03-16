@@ -70,11 +70,11 @@ func TestBoardCreateCommandWithAllFlags(t *testing.T) {
 		json.Unmarshal(body, &payload)
 
 		boardPayload := payload["board"]
-		if !boardPayload.AllAccess {
-			t.Error("expected AllAccess to be true")
+		if boardPayload.AllAccess == nil || !*boardPayload.AllAccess {
+			t.Error("expected AllAccess to be pointer to true")
 		}
-		if boardPayload.AutoPostponePeriod != 7 {
-			t.Errorf("expected AutoPostponePeriod 7, got %d", boardPayload.AutoPostponePeriod)
+		if boardPayload.AutoPostponePeriodInDays != 7 {
+			t.Errorf("expected AutoPostponePeriodInDays 7, got %d", boardPayload.AutoPostponePeriodInDays)
 		}
 		if boardPayload.PublicDescription != "Team project" {
 			t.Errorf("expected description 'Team project', got %s", boardPayload.PublicDescription)

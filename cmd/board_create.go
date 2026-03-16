@@ -33,10 +33,10 @@ func handleCreateBoard(cmd *cobra.Command) error {
 	publicDescription, _ := cmd.Flags().GetString("description")
 
 	payload := fizzy.CreateBoardPayload{
-		Name:               name,
-		AllAccess:          allAccess,
-		AutoPostponePeriod: autoPostponePeriod,
-		PublicDescription:  publicDescription,
+		Name:                     name,
+		AllAccess:                &allAccess,
+		AutoPostponePeriodInDays: autoPostponePeriod,
+		PublicDescription:        publicDescription,
 	}
 
 	err := a.Client.CreateBoard(context.Background(), payload)

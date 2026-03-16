@@ -46,7 +46,7 @@ func handleUpdateBoard(cmd *cobra.Command, boardID string) error {
 	}
 	if cmd.Flags().Changed("auto-postpone-period") {
 		autoPostponePeriod, _ := cmd.Flags().GetInt("auto-postpone-period")
-		payload.AutoPostponePeriod = &autoPostponePeriod
+		payload.AutoPostponePeriodInDays = &autoPostponePeriod
 	}
 	if cmd.Flags().Changed("description") {
 		publicDescription, _ := cmd.Flags().GetString("description")
