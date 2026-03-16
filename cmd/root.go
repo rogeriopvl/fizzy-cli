@@ -11,7 +11,7 @@ import (
 var Version = "dev"
 
 var rootCmd = &cobra.Command{
-	Use:     "fizzy-cli",
+	Use:     "fizzy",
 	Short:   "Fizzy CLI",
 	Long:    `Fizzy CLI`,
 	Version: Version,
