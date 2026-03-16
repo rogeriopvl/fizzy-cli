@@ -14,7 +14,8 @@ Use subcommands to manage webhooks:
   fizzy webhook list      List all webhooks
   fizzy webhook show      Show webhook details
   fizzy webhook update    Update a webhook
-  fizzy webhook delete    Delete a webhook`,
+  fizzy webhook delete    Delete a webhook
+  fizzy webhook activate  Activate a webhook`,
 }
 
 func init() {
