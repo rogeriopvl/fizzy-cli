@@ -11,7 +11,9 @@ All the commands for development are available through Makefile, just read that
 file whenever you need to run something because chances are that you will find
 you answer there.
 
-You can find the Fizzy API specification at @docs/API.md
+You can find the Fizzy API specification at @docs/API.md , but you don't need to
+implement any API layer since that is already provided by the package
+https://github.com/rogeriopvl/fizzy-go.
 
 ## Testing
 
