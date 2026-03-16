@@ -27,6 +27,13 @@ func handleCreateWebhook(cmd *cobra.Command) error {
 	}
 
 	boardID, _ := cmd.Flags().GetString("board-id")
+	if boardID == "" {
+		boardID = a.Config.SelectedBoard
+	}
+	if boardID == "" {
+		return fmt.Errorf("no board specified: use --board-id or select a board with 'fizzy use'")
+	}
+
 	name, _ := cmd.Flags().GetString("name")
 	url, _ := cmd.Flags().GetString("url")
 	actions, _ := cmd.Flags().GetStringSlice("actions")
@@ -47,8 +54,7 @@ func handleCreateWebhook(cmd *cobra.Command) error {
 }
 
 func init() {
-	webhookCreateCmd.Flags().StringP("board-id", "b", "", "Board ID (required)")
-	webhookCreateCmd.MarkFlagRequired("board-id")
+	webhookCreateCmd.Flags().StringP("board-id", "b", "", "Board ID (uses selected board if not specified)")
 	webhookCreateCmd.Flags().StringP("name", "n", "", "Webhook name (required)")
 	webhookCreateCmd.MarkFlagRequired("name")
 	webhookCreateCmd.Flags().StringP("url", "u", "", "Webhook payload URL (required)")

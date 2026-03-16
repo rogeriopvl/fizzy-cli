@@ -10,6 +10,7 @@ import (
 
 	fizzy "github.com/rogeriopvl/fizzy-go"
 	"github.com/rogeriopvl/fizzy-cli/internal/app"
+	"github.com/rogeriopvl/fizzy-cli/internal/config"
 	"github.com/rogeriopvl/fizzy-cli/internal/testutil"
 )
 
@@ -65,6 +66,64 @@ func TestWebhookCreateCommandSuccess(t *testing.T) {
 	}
 }
 
+func TestWebhookCreateCommandWithSelectedBoard(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/test-account/boards/selected-board/webhooks" {
+			t.Errorf("expected /test-account/boards/selected-board/webhooks, got %s", r.URL.Path)
+		}
+
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(fizzy.Webhook{
+			ID:   "webhook-456",
+			Name: "My Webhook",
+		})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "selected-board"},
+	}
+
+	cmd := webhookCreateCmd
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--board-id", "", "--name", "My Webhook", "--url", "https://example.com/hook"})
+
+	if err := handleCreateWebhook(cmd); err != nil {
+		t.Fatalf("handleCreateWebhook failed: %v", err)
+	}
+}
+
+func TestWebhookCreateCommandFlagOverridesSelectedBoard(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/test-account/boards/flag-board/webhooks" {
+			t.Errorf("expected /test-account/boards/flag-board/webhooks, got %s", r.URL.Path)
+		}
+
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(fizzy.Webhook{
+			ID:   "webhook-456",
+			Name: "My Webhook",
+		})
+	}))
+	defer server.Close()
+
+	client := testutil.NewTestClient(server.URL, "", "", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{SelectedBoard: "selected-board"},
+	}
+
+	cmd := webhookCreateCmd
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--board-id", "flag-board", "--name", "My Webhook", "--url", "https://example.com/hook"})
+
+	if err := handleCreateWebhook(cmd); err != nil {
+		t.Fatalf("handleCreateWebhook failed: %v", err)
+	}
+}
+
 func TestWebhookCreateCommandWithActions(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, _ := io.ReadAll(r.Body)
@@ -104,6 +163,26 @@ func TestWebhookCreateCommandWithActions(t *testing.T) {
 
 	if err := handleCreateWebhook(cmd); err != nil {
 		t.Fatalf("handleCreateWebhook failed: %v", err)
+	}
+}
+
+func TestWebhookCreateCommandNoBoard(t *testing.T) {
+	client := testutil.NewTestClient("http://localhost", "", "", "test-token")
+	testApp := &app.App{
+		Client: client,
+		Config: &config.Config{},
+	}
+
+	cmd := webhookCreateCmd
+	cmd.SetContext(testApp.ToContext(context.Background()))
+	cmd.ParseFlags([]string{"--board-id", "", "--name", "My Webhook", "--url", "https://example.com/hook"})
+
+	err := handleCreateWebhook(cmd)
+	if err == nil {
+		t.Errorf("expected error when no board specified")
+	}
+	if err.Error() != "no board specified: use --board-id or select a board with 'fizzy use'" {
+		t.Errorf("expected no board error, got %v", err)
 	}
 }
 

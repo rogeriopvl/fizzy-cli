@@ -10,7 +10,8 @@ var webhookCmd = &cobra.Command{
 	Long: `Manage webhooks for a board.
 
 Use subcommands to manage webhooks:
-  fizzy webhook create    Create a new webhook`,
+  fizzy webhook create    Create a new webhook
+  fizzy webhook list      List all webhooks`,
 }
 
 func init() {
