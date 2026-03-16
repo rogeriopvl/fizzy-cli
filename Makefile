@@ -18,7 +18,9 @@ run:
 	go run .
 
 install:
-	go install $(LDFLAGS) .
+	GOBIN=$$(go env GOBIN); \
+	if [ -z "$$GOBIN" ]; then GOBIN=$$(go env GOPATH)/bin; fi; \
+	go build $(LDFLAGS) -o $$GOBIN/fizzy .
 
 build:
 	go build $(LDFLAGS) -o bin/fizzy .
