@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.1.0 - 2026-03-16
+
+### Features
+
+#### Webhook Management
+
+- `fizzy webhook create` - Create a new webhook for a board
+- `fizzy webhook list` - List all webhooks for a board
+- `fizzy webhook show <webhook_id>` - Display details for a specific webhook
+- `fizzy webhook update <webhook_id>` - Update webhook properties (name, URL, actions)
+- `fizzy webhook delete <webhook_id>` - Delete a webhook
+- `fizzy webhook activate <webhook_id>` - Activate a webhook
+
+#### Board Management
+
+- `fizzy board publish <board_id>` - Make a board publicly accessible
+- `fizzy board unpublish <board_id>` - Remove public access from a board
+
+### Internal
+
+- Updated `fizzy-go` dependency to v1.1.0
+
 ## 1.0.2 - 2026-02-24
 
 ### Internal
