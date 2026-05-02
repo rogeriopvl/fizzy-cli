@@ -44,6 +44,7 @@ test:
 	gotestsum -- -v ./...
 
 sync-api-spec:
+	@rm -rf docs/api
 	@mkdir -p docs
-	@curl -s https://raw.githubusercontent.com/basecamp/fizzy/main/docs/API.md -o docs/API.md
-	@echo "API spec synced to docs/API.md"
+	@curl -sL https://github.com/basecamp/fizzy/archive/refs/heads/main.tar.gz | tar -xz -C docs --strip-components=2 fizzy-main/docs/api
+	@echo "API spec synced to docs/api"
