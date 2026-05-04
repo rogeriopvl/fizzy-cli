@@ -2,7 +2,7 @@
 
 A Go CLI for the [Fizzy](https://fizzy.do) API. Fizzy is a kanban-style project management SaaS.
 
-The binary is `fizzy` and is distributed via npm (`fizzy-cli` package); `scripts/postinstall.js` downloads the matching Go binary from the GitHub release on install. Local installs use `make install` to drop the binary into `$GOBIN`.
+The binary is `fizzy` and is distributed via npm (`fizzy-cli` package); `scripts/postinstall.js` downloads the matching Go binary from the GitHub release on install. It's also distributed via the [`rogeriopvl/tap`](https://github.com/rogeriopvl/homebrew-tap) Homebrew formula, which builds from source. Local installs use `make install` to drop the binary into `$GOBIN`.
 
 ## Architecture
 
@@ -76,5 +76,9 @@ The release flow:
 7. Push commit and tag together: `git push --follow-tags`.
 8. Create the GitHub release (`gh release create vX.Y.Z --notes-file <file>`) — no need to attach binaries by hand. The `release.yml` workflow listens on `release: created`, runs `make build-all`, and uploads `bin/fizzy-*` to the release. `scripts/postinstall.js` then fetches them on `npm install`.
 9. Publish to npm so the new version is installable.
+10. Update the Homebrew tap. In a local clone of [`rogeriopvl/homebrew-tap`](https://github.com/rogeriopvl/homebrew-tap), edit `Formula/fizzy-cli.rb`:
+    - Bump `url` to `https://github.com/rogeriopvl/fizzy-cli/archive/refs/tags/vX.Y.Z.tar.gz`.
+    - Bump `sha256` to the tarball's hash (`curl -sSL <url> | sha256sum`).
+    - Commit as `fizzy-cli vX.Y.Z` (matches the existing terse style) and push.
 
 Do not add `Co-Authored-By` trailers (or any other AI-attribution trailer) to commit messages.
