@@ -7,6 +7,9 @@
   "bin": {
     "fizzy": "bin/fizzy"
   },
+  "files": [
+    "scripts/postinstall.js"
+  ],
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
     "prepack": "rm -f bin/fizzy bin/fizzy.exe",

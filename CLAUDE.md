@@ -74,7 +74,7 @@ The release flow:
 5. Commit as `chore(release): vX.Y.Z`.
 6. Tag: `git tag -a vX.Y.Z -m "vX.Y.Z"`.
 7. Push commit and tag together: `git push --follow-tags`.
-8. Create the GitHub release (`gh release create vX.Y.Z`) — `make build-all` artifacts must be attached so `scripts/postinstall.js` can fetch them on `npm install`.
+8. Create the GitHub release (`gh release create vX.Y.Z --notes-file <file>`) — no need to attach binaries by hand. The `release.yml` workflow listens on `release: created`, runs `make build-all`, and uploads `bin/fizzy-*` to the release. `scripts/postinstall.js` then fetches them on `npm install`.
 9. Publish to npm so the new version is installable.
 
 Do not add `Co-Authored-By` trailers (or any other AI-attribution trailer) to commit messages.
