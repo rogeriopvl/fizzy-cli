@@ -1,5 +1,74 @@
 # Changelog
 
+## 1.2.0 - 2026-05-04
+
+### Features
+
+#### Activity Feed
+
+- `fizzy activity list` - List recent account activity with `--creator`, `--board`, `--limit` filters
+
+#### Pinned Cards
+
+- `fizzy card pin <card_number>` - Pin a card
+- `fizzy card unpin <card_number>` - Unpin a card
+- `fizzy pin list` - List the current user's pinned cards
+
+#### Card Management
+
+- `fizzy card image delete <card_number>` - Remove a card's image
+
+#### Step Management
+
+- `fizzy step show <card_number> <step_id>` - Show step details
+
+#### Column Management
+
+- `fizzy column cards <column_id>` - List cards in a column
+
+#### Board Management
+
+- `fizzy board entropy <board_id> --auto-postpone-days N` - Update a board's auto-postpone period
+- `fizzy board access list <board_id>` - List user access for a board
+
+#### Account Management
+
+- `fizzy account show` - Show account details
+- `fizzy account entropy --auto-postpone-days N` - Update the account-wide auto-postpone period
+- `fizzy account joincode show` - Display the account's join code
+- `fizzy account joincode update --usage-limit N` - Update the join code's usage limit
+- `fizzy account joincode reset` - Generate a new join code
+
+#### Notification Settings
+
+- `fizzy notification settings show` - Show notification settings
+- `fizzy notification settings update --bundle-email-frequency X` - Update notification settings
+
+#### Webhook Deliveries
+
+- `fizzy webhook delivery list <webhook_id>` - List delivery attempts for a webhook
+
+#### Personal Access Tokens
+
+- `fizzy token create --description X --permission Y` - Create a personal access token
+
+#### Exports
+
+- `fizzy export account create` - Start an account export
+- `fizzy export account show <export_id>` - Show account export status
+- `fizzy export user create <user_id>` - Start a personal data export
+- `fizzy export user show <user_id> <export_id>` - Show personal data export status
+
+#### User Management
+
+- `fizzy user avatar delete <user_id>` - Delete a user's avatar
+- `fizzy user email request-change <user_id> --email X` - Request a user email address change
+- `fizzy user email confirm-change <user_id> --token X` - Confirm a user email address change
+
+### Internal
+
+- Updated `fizzy-go` dependency to v1.2.1
+
 ## 1.1.0 - 2026-03-16
 
 ### Features
