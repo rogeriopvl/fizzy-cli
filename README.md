@@ -75,6 +75,43 @@ The `use` command also supports selecting a different account:
 fizzy use --account <account_slug>
 ```
 
+## Commands
+
+Top-level commands, grouped by what they do. Run `fizzy <command> --help` (or `fizzy <command> <subcommand> --help`) for subcommands and flags.
+
+**Boards & navigation**
+
+- `fizzy board` — create, list, show, update, delete, publish, and manage access for boards
+- `fizzy column` — manage columns and list a column's cards
+- `fizzy use` — select the active board or account
+- `fizzy whoami` — show the current user and accessible accounts
+
+**Cards**
+
+- `fizzy card` — create, list, show, update, delete, assign, tag, watch, pin, triage, close/reopen, mark golden, postpone, and remove a card's image
+- `fizzy comment` — create, list, show, update, delete card comments
+- `fizzy step` — manage checklist items on a card
+- `fizzy reaction` — manage emoji reactions on comments
+- `fizzy tag` — list account tags
+- `fizzy pin` — list pinned cards
+
+**Notifications & activity**
+
+- `fizzy notification` — list notifications, mark read/unread, manage notification settings
+- `fizzy activity` — view the account-wide activity feed
+
+**Accounts & users**
+
+- `fizzy account` — show settings, manage entropy (auto-postpone), join codes
+- `fizzy user` — list, show, update, deactivate users; manage avatars and email-change flow
+- `fizzy export` — create and view account or user-data exports
+
+**Integrations & auth**
+
+- `fizzy webhook` — create, list, show, update, delete, activate webhooks and view delivery logs
+- `fizzy token` — create personal access tokens
+- `fizzy login` / `fizzy logout` — authenticate or destroy the session
+
 ## Development
 
 ### Tests
